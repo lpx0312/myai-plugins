@@ -76,6 +76,16 @@
         "url": "https://github.com/thedotmack/claude-mem.git"
       },
       "homepage": "https://github.com/thedotmack/claude-mem"
+    },
+    {
+      "name": "obsidian-skills",
+      "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
+      "category": "productivity",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/kepano/obsidian-skills.git"
+      },
+      "homepage": "https://github.com/kepano/obsidian-skills"
     }
   ]
 }
