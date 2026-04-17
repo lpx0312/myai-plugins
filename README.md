@@ -88,3 +88,8 @@ claude -p "/plugin install mcp-server-dev@claude-plugins-official"
 claude -p "/plugin install ralph-loop@claude-plugins-official"
 claude -p "/plugin install skill-creator@claude-plugins-official"
 ```
+
+
+## 插件更新：
+1. 我的理解： 插件市场中的引用的别的仓库是 url的形式的话，可以直接找到插件人后更新，
+2. 如果是本地插件 比如 "source": "./plugin", 或者 "source": "./", 这样的话，找到插件个更新根本没有意义，这种的话，直接更新插件市场就行了
