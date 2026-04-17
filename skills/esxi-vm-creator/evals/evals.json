@@ -1,0 +1,166 @@
+{
+  "skill_name": "esxi-vm-creator",
+  "description": "ESXI 虚拟机创建助手测试用例",
+  "evals": [
+    {
+      "id": 1,
+      "name": "simple-vm-creation",
+      "prompt": "帮我开一台虚拟机",
+      "expected_output": "AI 应该触发 skill 并开始收集参数：主机名、IP 地址等",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "specific-vm-request",
+      "prompt": "创建一个名为 test-app01 的虚拟机，内网 IP 用 10.0.1.200，外网 IP 用 192.168.1.200，规格 2核4G",
+      "expected_output": "AI 应该触发 skill，检查 ESXI 连通性，检查 IP 冲突，然后创建虚拟机",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "casual-vm-request",
+      "prompt": "我需要一台新的测试服务器",
+      "expected_output": "AI 应该触发 skill 并询问需要的参数",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "vm-with-shorthand-ip",
+      "prompt": "开台虚拟机，IP 用 1.190，名字叫 web01",
+      "expected_output": "AI 应该触发 skill 并将 IP 简写 1.190 解析为 10.0.1.190 和 192.168.1.190",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "template-specific-request",
+      "prompt": "用 RockyLinux 8 模板创建一个虚拟机",
+      "expected_output": "AI 应该触发 skill，选择 R81 或 R82 模板",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "batch-vm-creation",
+      "prompt": "帮我创建 3 台虚拟机，IP 从 1.200 到 1.202",
+      "expected_output": "AI 应该触发 skill，创建 3 台 IP 递增的虚拟机",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 7,
+      "name": "clone-template-phrasing",
+      "prompt": "克隆个 C72 模板出来",
+      "expected_output": "AI 应该触发 skill 并询问主机名和 IP 地址",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 8,
+      "name": "deploy-server-phrasing",
+      "prompt": "部署个 CentOS 应用服务器",
+      "expected_output": "AI 应该触发 skill 并收集参数",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 9,
+      "name": "vm-provisioning",
+      "prompt": "我需要开通一台 Linux 虚拟机用于开发测试",
+      "expected_output": "AI 应该触发 skill",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 10,
+      "name": "unclear-vm-request",
+      "prompt": "帮我要台机器",
+      "expected_output": "AI 应该触发 skill 并询问详细信息",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 11,
+      "name": "english-vm-creation",
+      "prompt": "create a new VM for testing",
+      "expected_output": "AI 应该触发 skill",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 12,
+      "name": "vm-with-gui",
+      "prompt": "创建一台带桌面的 CentOS 虚拟机",
+      "expected_output": "AI 应该触发 skill，选择 C72GUI 或类似模板",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 13,
+      "name": "single-nic-vm",
+      "prompt": "创建只要内网的虚拟机",
+      "expected_output": "AI 应该触发 skill，选择 C71 等单网卡模板",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 14,
+      "name": "high-spec-vm",
+      "prompt": "创建一台高性能虚拟机，8核16G",
+      "expected_output": "AI 应该触发 skill，设置 CPU_ALL_NUM=8, memSize=16384",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 15,
+      "name": "vm-with-disk",
+      "prompt": "创建一台带 500G 第二块硬盘的虚拟机",
+      "expected_output": "AI 应该触发 skill，设置 SECOND_DISK_SIZE=500",
+      "should_trigger": true,
+      "files": []
+    },
+    {
+      "id": 101,
+      "name": "aws-vm-creation",
+      "prompt": "在 AWS 上创建一台 EC2 实例",
+      "expected_output": "不应该触发此 skill，这是 AWS 不是 ESXI",
+      "should_trigger": false,
+      "files": []
+    },
+    {
+      "id": 102,
+      "name": "docker-container",
+      "prompt": "创建一个 Docker 容器",
+      "expected_output": "不应该触发此 skill，这是 Docker 不是 ESXI 虚拟机",
+      "should_trigger": false,
+      "files": []
+    },
+    {
+      "id": 103,
+      "name": "file-read",
+      "prompt": "读取这个文件的内容",
+      "expected_output": "不应该触发此 skill",
+      "should_trigger": false,
+      "files": []
+    },
+    {
+      "id": 104,
+      "name": "code-review",
+      "prompt": "帮我审查这段代码",
+      "expected_output": "不应该触发此 skill",
+      "should_trigger": false,
+      "files": []
+    },
+    {
+      "id": 105,
+      "name": "weather-query",
+      "prompt": "今天天气怎么样",
+      "expected_output": "不应该触发此 skill",
+      "should_trigger": false,
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "name": "myai-plugins",
+  "description": "Directory of popular Claude Code extensions including development tools, productivity plugins, and MCP integrations",
+  "owner": {
+    "name": "lpx03",
+    "email": "lpx03_12@outlook.com"
+  },
+  "plugins": [    
+    {
+      "name": "myai-tools",
+      "source": "./",
+      "category": "development",
+      "description": "Reliable automation, in-depth debugging, and performance analysis in Chrome using Chrome DevTools and Puppeteer"
+    },
+    {
+      "name": "chrome-devtools-mcp",
+      "description": "Control and inspect a live Chrome browser from your coding agent. Record performance traces, analyze network requests, check console messages with source-mapped stack traces, and automate browser actions with Puppeteer.",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp.git",
+        "sha": "c2d8009ff75f76bce1ec4cf79c2467b50d81725e"
+      },
+      "homepage": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+    },
+    {
+      "name": "postman",
+      "description": "Full API lifecycle management for Claude Code. Sync collections, generate client code, discover APIs, run tests, create mocks, publish docs, and audit security. Powered by the Postman MCP Server.",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/Postman-Devrel/postman-claude-code-plugin.git",
+        "sha": "40b11ac3466c500cf4625ac016d5c01cd00046f4"
+      },
+      "homepage": "https://learning.postman.com/docs/developer/postman-mcp-server/"
+    },
+    {
+      "name": "superpowers",
+      "description": "Superpowers teaches Claude brainstorming, subagent driven development with built in code review, systematic debugging, and red/green TDD. Additionally, it teaches Claude how to author and test new skills.",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/obra/superpowers.git"
+      },
+      "homepage": "https://github.com/obra/superpowers.git"
+    },
+    {
+      "name": "vercel",
+      "description": "Vercel deployment platform integration. Manage deployments, check build status, access logs, configure domains, and control your frontend infrastructure directly from Claude Code.",
+      "category": "deployment",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/vercel/vercel-plugin.git"
+      },
+      "homepage": "https://github.com/vercel/vercel-plugin"
+    },
+    {
+      "name": "everything-claude-code",
+      "description": "Battle-tested Claude Code configurations from an Anthropic hackathon winner",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/affaan-m/everything-claude-code.git"
+      },
+      "homepage": "https://github.com/affaan-m/everything-claude-code"
+    },
+    {
+      "name": "claude-mem",
+      "description": "A Claude Code plugin that automatically captures everything Claude does during your coding sessions, compresses it with AI, and injects relevant context back into future sessions.",
+      "category": "productivity",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/thedotmack/claude-mem.git"
+      },
+      "homepage": "https://github.com/thedotmack/claude-mem"
+    }
+  ]
+}

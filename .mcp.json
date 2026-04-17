@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "ssh-mcp-server": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "--registry", "http://192.168.0.12/repository/npm-group/",
+          "-y",
+          "@lpx/ssh-mcp-server",
+          "--config-file",
+          "D:\\AI\\github-code\\ssh-mcp-server\\ssh-config.json"
+        ]
+      }
+  }
+}
