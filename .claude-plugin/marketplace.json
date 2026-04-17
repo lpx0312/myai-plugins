@@ -10,7 +10,7 @@
       "name": "myai-tools",
       "source": {
         "source": "url",
-        "url": "https://github.com/lpx03/myai-tools.git"
+        "url": "https://github.com/lpx0312/myai-plugins.git"
       },
       "category": "development",
       "description": "Reliable automation, in-depth debugging, and performance analysis in Chrome using Chrome DevTools and Puppeteer"
