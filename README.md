@@ -47,6 +47,14 @@ skills/
     SKILL.md
 ```
 
+## 本仓库插件市场
+
+```
+/plugin marketplace add lpx0312/myai-plugins
+
+```
+
+
 
 ## 还有些官方插件，需要单独安装
 

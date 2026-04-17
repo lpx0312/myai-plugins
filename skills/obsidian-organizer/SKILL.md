@@ -1,6 +1,7 @@
 ---
 name: obsidian-organizer
-description: Use when organizing notes, extracting tags, migrating old #tag format, optimizing metadata, or establishing note links. Coordinates with official obsidian-skills for vault operations and formatting.
+description: Use when organizing notes, extracting tags, migrating old 
+#tag format, optimizing metadata, or establishing note links. Coordinates with official obsidian-skills for vault operations and formatting.
 ---
 
 # Obsidian 笔记智能组织器
