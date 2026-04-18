@@ -60,12 +60,17 @@ description: 自动生成 Linux 二进制工具安装脚本的完整工作流。
 ```powershell
 $env:MIRROR_LOCAL_ROOT = "Z:\"
 $env:GITHUB_TOKEN = "ghp_xxxx"
+$env:MIRROR_INTRANET_BASE_URL="http://mirrors.xx.com"
+$env:TEST_NODE_IP='192.168.x.x'
+
 ```
 
 **Linux/macOS:**
 ```bash
 export MIRROR_LOCAL_ROOT="/mirrors"
 export GITHUB_TOKEN="ghp_xxxx"
+export MIRROR_INTRANET_BASE_URL="http://mirrors.xx.com"
+export TEST_NODE_IP='192.168.x.x'
 ```
 
 ---
