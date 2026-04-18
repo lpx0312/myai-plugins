@@ -262,17 +262,15 @@ if [[ -z "${HTTPS_PROXY}" ]]; then
     exit 1
 fi
 
-
-# 判断是否带 -n
-EXTRA_ARGS=""
-if [[ "$1" == "-n" ]]; then
-    EXTRA_ARGS="-n"
-fi
-
 # 可以保留注释的旧命令作为备份
 #bash {name}-downloader.sh -p http://192.168.0.225:7897 -t xxxx -V -d ${CURRENT_DIR}
 
-bash {name}-downloader.sh -p "${HTTPS_PROXY}" -t "${GITHUB_TOKEN}" -V -d "${CURRENT_DIR}" ${EXTRA_ARGS}
+# 使用入口脚本统一下载 containerd
+if [[ "$1" == "-n" ]]; then
+	bash {name}-downloader.sh -p ${HTTPS_PROXY} -t ${GITHUB_TOKEN} -V -d ${CURRENT_DIR} -n
+else
+	bash {name}-downloader.sh -p ${HTTPS_PROXY} -t ${GITHUB_TOKEN} -V -d ${CURRENT_DIR}
+fi
 ```
 
 **入口脚本说明：**
@@ -325,8 +323,9 @@ cp /c/Users/lipanx/.claude/projects/z--soft/runtime/docker_tools/image-syncer/*.
 
 2. 先用 dry-run 模式测试：使用入口脚本模拟测试
    ```bash
-   ./download.sh -n
+   timeout 60 ./download.sh -n
    ```
+   根据打印日志: 如果全部或者大部分是  [状态: 可用] 则说明测试通过
    只要模式测试通过，就说明脚本可以交付了，不需要其他测试了
 
 ## 文件命名规则示例
