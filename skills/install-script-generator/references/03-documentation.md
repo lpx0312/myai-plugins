@@ -3,8 +3,8 @@
 **输入：** 阶段 2 完成的脚本
 **输出：** `README.md`
 **输出目录**: 从 阶段 1 获取的 OUTPUT_DIR
-**输出文档的本地内网服务器路径**: `${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\README.md`
-**输出文档的本地内网服务器URL**: `${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\README.md`
+**输出文档的本地内网服务器路径**: `LOCAL_MD_PATH = ${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\README.md`
+**输出文档的本地内网服务器URL**: `IN_MD_URL = ${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\README.md`
 
 ---
 
@@ -43,7 +43,8 @@ nerdctl → {TOOL_NAME}
 containerd/nerdctl → {category}/{tool_name}
 Docker → 相关上下文（保持一致性）
 runtime/nerdctl → scripts/{category}/{tool_name}
-内网地址 → http://192.168.0.180:8082/scripts/{category}/{tool_name}
+内网地址 → ${IN_MD_URL}
+
 ```
 
 

@@ -3,23 +3,22 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "参照 runtime/nerdctl/install_nerdctl.sh，帮我为 kubectl 编写安装脚本，放到 runtime/kubectl 目录下",
-      "expected_output": "生成 runtime/kubectl/install_kubectl.sh 脚本，支持版本选择、架构检测、内外网自动切换，并生成对应的 README.md 文档",
-      "files": [
-        "runtime/nerdctl/install_nerdctl.sh",
-        "runtime/nerdctl/README.md"
-      ]
-    },
-    {
-      "id": 2,
-      "prompt": "我需要为 helm 编写安装脚本，参考现有的脚本模板，放到 runtime/helm 目录",
-      "expected_output": "生成 runtime/helm/install_helm.sh 脚本和 README.md，支持从内网镜像或 GitHub releases 下载",
+      "prompt": "帮我为 buildkit 创建安装脚本，buildkit 是一个容器构建工具，包格式是 buildkit-v{version}.linux-{arch}.tar.gz，GitHub 仓库是 moby/buildkit，放到 runtime/buildkit 目录下",
+      "expected_output": "生成 runtime/buildkit/install_buildkit.sh 和 README.md，支持版本选择、架构检测、tar.gz解压、内外网自动切换，参照现有模板风格",
       "files": []
     },
     {
+      "id": 2,
+      "prompt": "请参照 runtime/runc/install_runc.sh 脚本，为 crictl（容器运行时CLI工具，仓库是 kubernetes-sigs/cri-tools，包格式是 crictl-{version}-linux-{arch}.tar.gz）编写安装脚本，放到 runtime/crictl 目录",
+      "expected_output": "生成 runtime/crictl/install_crictl.sh 和 README.md，复用 runc 模板结构但替换工具特定部分（工具名、仓库、文件名格式）",
+      "files": [
+        "runtime/runc/install_runc.sh"
+      ]
+    },
+    {
       "id": 3,
-      "prompt": "帮我为 terraform 创建安装脚本，参照 runc 或 nerdctl 的脚本结构",
-      "expected_output": "生成 runtime/terraform/install_terraform.sh，支持 zip 格式解压和版本管理",
+      "prompt": "我需要为 kind（Kubernetes IN Docker，仓库是 kubernetes-sigs/kind）写个安装脚本，放到 runtime/kind，版本是 v0.20.0，要支持通过代理访问 GitHub",
+      "expected_output": "生成 runtime/kind/install_kind.sh 和 README.md，支持 -p/--proxy 参数、kind 二进制安装（不需要解压），内网使用镜像站",
       "files": []
     }
   ]
