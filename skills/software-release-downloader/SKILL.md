@@ -113,11 +113,25 @@ description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当
 
 **必须遵守的关键规则：**
 
+0. **必需环境变量检查** - 脚本开头必须检查：
+   ```bash
+   # 检查必需的环境变量
+   if [[ -z "${GITHUB_TOKEN}" ]]; then
+       log_error "GITHUB_TOKEN 环境变量未设置"
+       exit 1
+   fi
+
+   if [[ -z "${PROXY}" ]]; then
+       log_error "PROXY 环境变量未设置"
+       exit 1
+   fi
+   ```
+
 1. **代理设置方式** - 使用环境变量，不是 curl 参数
    ```bash
    # 正确方式 (curl 自动使用)
-   export http_proxy="$PROXY"
-   export https_proxy="$PROXY"
+   export HTTP_PROXY="$PROXY"
+   export HTTPS_PROXY="$PROXY"
 
    # 错误方式 (不要这样)
    curl -x "$PROXY" ...
@@ -137,8 +151,11 @@ description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当
 
    # 错误方式 (不要这样)
    local curl_cmd="curl -L -s"
-   if [[ -n "$PROXY" ]]; then
-       curl_cmd="$curl_cmd -x \"$PROXY\""
+   if [[ -n "$HTTP_PROXY" ]]; then
+       curl_cmd="$curl_cmd -x \"$HTTP_PROXY\""
+   fi
+   if [[ -n "$HTTPS_PROXY" ]]; then
+       curl_cmd="$curl_cmd -x \"$HTTPS_PROXY\""
    fi
    $curl_cmd "$url" -o "$output"
    ```
@@ -207,8 +224,8 @@ fi
 
 根据项目类型选择模板：
 
-- **tar.gz 压缩包** - 参考 containerd-downloader.sh
-- **纯二进制文件** - 参考 runc-downloader.sh
+- **tar.gz 压缩包** - 参考模板 containerd-downloader.sh
+- **纯二进制文件** - 参考模板 runc-downloader.sh
 
 关键修改点：
 
@@ -229,18 +246,37 @@ fi
 ```bash
 #!/bin/bash
 
+# 检查必需的环境变量
+if [[ -z "${GITHUB_TOKEN}" ]]; then
+    echo  "[ ERROR ]: GITHUB_TOKEN 环境变量未设置"
+    exit 1
+fi
+
+if [[ -z "${HTTP_PROXY}" ]]; then
+    echo  "[ ERROR ]: PROXY 环境变量未设置"
+    exit 1
+fi
+
+if [[ -z "${HTTPS_PROXY}" ]]; then
+    echo  "[ ERROR ]: HTTPS_PROXY 环境变量未设置"
+    exit 1
+fi
+
 CURRENT_DIR=$(cd `dirname $0`; pwd)
 # 可以保留注释的旧命令作为备份
 #bash {name}-downloader.sh -p http://192.168.0.225:7897 -t xxxx -V -d ${CURRENT_DIR}
-bash {name}-downloader.sh -p ${HTTPS_PROXY} -t ${GITHUB_TOKEN} -V -d ${CURRENT_DIR}
+
+bash {name}-downloader.sh -p "${HTTPS_PROXY}" -t "${GITHUB_TOKEN}" -V -d "${CURRENT_DIR}"
 ```
 
 **入口脚本说明：**
 - `CURRENT_DIR` - 获取脚本所在目录的绝对路径
-- 使用环境变量 `HTTPS_PROXY` 设置下载代理
-- 使用环境变量 `GITHUB_TOKEN` 设置 GitHub 访问令牌
-- 启用验证模式：`-V`    
+- **必须设置 `HTTPS_PROXY`** - 不存在则直接退出
+- **必须设置 `GITHUB_TOKEN`** - 不存在则直接退出
+- 使用环境变量设置代理和 Token
+- 启用验证模式：`-V`
 - 下载到脚本所在目录
+- **重要：变量必须加引号**，避免空变量导致参数解析错误
 
 ### 5. 输出文件结构
 
@@ -281,11 +317,10 @@ cp /c/Users/lipanx/.claude/projects/z--soft/runtime/docker_tools/image-syncer/*.
    chmod +x {name}-downloader.sh download.sh
    ```
 
-2. 先用 dry-run 模式测试：
+2. 先用 dry-run 模式测试：使用入口脚本模拟测试
    ```bash
-   ./{name}-downloader.sh -n
+   ./download.sh -n
    ```
-
 3. 检查 URL 可用性
 
 4. 下载少量版本测试
@@ -343,18 +378,6 @@ verify_tarball() {
 }
 ```
 
-## 默认配置
-
-入口脚本使用以下固定配置：
-
-```bash
-# 代理地址
-PROXY="${HTTPS_PROXY}"
-
-# GitHub Token（测试用）
-TOKEN="${GITHUB_TOKEN}"
-```
-
 ## 检查 Release 文件
 
 使用 `scripts/check_release_files.sh` 快速查看项目的 release 文件命名：
@@ -389,8 +412,8 @@ bash scripts/check_release_files.sh containerd containerd v1.7.0
    # 方式2：直接使用下载脚本
    ./{name}-downloader.sh --help
    ./{name}-downloader.sh -n              # dry-run 模式
-   ./{name}-downloader.sh -p ${HTTPS_PROXY}  # 使用代理
-   ./{name}-downloader.sh -t ${GITHUB_TOKEN} -V   # 使用 token 并验证
+   ./{name}-downloader.sh -p "${HTTPS_PROXY}"  # 使用代理
+   ./{name}-downloader.sh -t "${GITHUB_TOKEN}" -V   # 使用 token 并验证
    ```
 
 4. 如果用户有测试机器，建议先在测试环境验证
