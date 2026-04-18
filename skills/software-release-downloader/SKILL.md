@@ -241,8 +241,6 @@ fi
 
 ### 4. 生成入口脚本 (download.sh)
 
-入口脚本模板（完全按照 nerdctl/download.sh 格式）：
-
 ```bash
 #!/bin/bash
 
