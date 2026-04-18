@@ -1,5 +1,9 @@
 # 阶段 5: 上传验证
 
+从阶段 1 收集的信息中获取 OUTPUT_DIR：
+**脚本的本地内网服务器路径**: `LOCAL_SH_PATH = ${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\install_{tool}.sh`
+**脚本的本地内网服务器URL**: `IN_SH_URL = ${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\install_{tool}.sh`
+
 ---
 
 ## 5.1 确认脚本已上传
@@ -8,7 +12,7 @@
 
 ```bash
 # 确认文件存在
-ls -la "${MIRROR_LOCAL_ROOT}\scripts\{category}\{tool}\install_{tool}.sh"
+ls -la "${LOCAL_SH_PATH}"
 ```
 
 ---
@@ -16,7 +20,7 @@ ls -la "${MIRROR_LOCAL_ROOT}\scripts\{category}\{tool}\install_{tool}.sh"
 ## 5.2 验证文件服务器可访问
 
 ```bash
-curl -sI "http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh" | head -1
+curl -sI ${IN_SH_URL} | head -1
 ```
 
 期望输出：`HTTP/1.1 200 OK`
@@ -27,6 +31,6 @@ curl -sI "http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh"
 
 | 信息 | 值 |
 |------|---|
-| 脚本 URL | `http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh` |
-| 安装命令 | `curl -sSL <URL> \| sudo bash -s -- -v {version} -n in` |
+| 脚本 URL | `${IN_SH_URL}` |
+| 安装命令 | `curl -sSL ${IN_SH_URL} \| sudo bash -s -- -v {version} -n in` |
 | 支持版本 | 内网文件服务器上存在的版本 |

@@ -1,13 +1,19 @@
 # 阶段 4: 远程测试
 
-**测试服务器：** `192.168.1.182`
 
+**输入：** 阶段 2 收集的信息
+**脚本的本地内网服务器路径**: `LOCAL_SH_PATH = ${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\install_{tool}.sh`
+**脚本的本地内网服务器URL**: `IN_SH_URL = ${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\install_{tool}.sh`
+
+**使用 ssh-mcp-server MCP 连接测试服务器：** `${TEST_NODE_IP}`
+
+- 后续服务都在测试服务器上执行。
 ---
 
 ## 4.1 内网测试（必须）
 
 ```bash
-curl -sSL http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh | sudo bash -s -- -v {version} -n in
+curl -sSL ${IN_SH_URL} | sudo bash -s -- -v {version} -n in
 ```
 
 ---
@@ -15,15 +21,15 @@ curl -sSL http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh 
 ## 4.2 外网测试（如需要）
 
 ```bash
-export https_proxy=http://192.168.0.4:7890
-curl -sSL http://192.168.0.180:8082/scripts/{category}/{tool}/install_{tool}.sh | sudo bash -s -- -v {version} -n out -t ${GITHUB_TOKEN} -p http://192.168.0.4:7890
+export HTTP_PROXY=${HTTP_PROXY}
+curl -sSL ${IN_SH_URL} | sudo bash -s -- -v {version} -n out -t ${GITHUB_TOKEN} -p ${HTTP_PROXY}
 ```
 
 ---
 
 ## 4.3 验证步骤
 
-**使用 ssh-mcp-server MCP：**
+**：**
 
 1. 检查文件大小：
    ```bash

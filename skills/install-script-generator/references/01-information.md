@@ -15,30 +15,7 @@
 
 ---
 
-## 1.2 搜索参考模板
-
-**【强制步骤】** 使用 Everything Search 搜索本地挂载目录的脚本模板。
-
-```json
-mcp__everything-search__search
-{
-  "base": { "query": "path:$MIRROR_LOCAL_ROOT scripts install_*.sh", "max_results": 20 }
-}
-```
-
-**模板选择规则：**
-- Docker 生态工具 → `runtime/nerdctl/install_nerdctl.sh`
-- 单二进制文件 → `runtime/runc/install_runc.sh`
-- 复杂工具 → `runtime/containerd/install_containerd.sh`
-
-**读取模板内容：**
-```bash
-cat "${MIRROR_LOCAL_ROOT}\scripts\runtime\{template_path}\install_{tool}.sh"
-```
-
----
-
-## 1.3 搜索内网软件位置 ⚠️ 核心步骤
+## 1.2 搜索内网软件位置 ⚠️ 核心步骤
 
 **【强制步骤】** 使用 Everything Search 找到内网软件的实际路径。
 
@@ -109,7 +86,7 @@ tar -tf "${MIRROR_LOCAL_ROOT}/soft/linux/helm/v3.14.0/helm-v3.14.0-linux-amd64.t
 
 ---
 
-## 1.4 确定输出目录
+## 1.3 确定输出目录
 
 | 参数 | 说明 | 示例 |
 |------|------|------|
@@ -121,7 +98,7 @@ tar -tf "${MIRROR_LOCAL_ROOT}/soft/linux/helm/v3.14.0/helm-v3.14.0-linux-amd64.t
 
 ---
 
-## 1.5 确认外网下载源（如需外网）
+## 1.4 确认外网下载源（如需外网）
 
 **方法一：** 搜索内网参考脚本，完整读取理解外网 URL 构建方式
 
@@ -143,6 +120,7 @@ grep -E "github.com|releases/download" "${MIRROR_LOCAL_ROOT}\scripts\{found_path
 ```
 https://github.com/{owner}/{repo}/releases/download/v{version}/{filename}
 ```
+**上面方法搜索的都不对的话，最后在使用联网搜索来确认外网 URL 构建方式**
 
 ---
 

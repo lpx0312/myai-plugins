@@ -2,17 +2,15 @@
 
 **输入：** 阶段 2 完成的脚本
 **输出：** `README.md`
+**输出目录**: 从 阶段 1 获取的 OUTPUT_DIR
+**输出文档的本地内网服务器路径**: `${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\README.md`
+**输出文档的本地内网服务器URL**: `${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\README.md`
 
 ---
 
 ## 3.1 参照文档模板
 
-完全参照 `runtime/nerdctl/README.md` 的结构和格式。
-
-**模板路径：**
-```bash
-${MIRROR_LOCAL_ROOT}\scripts\runtime\nerdctl\README.md
-```
+完全参照 `assets/docs/README.md` 的结构和格式。
 
 ---
 
@@ -48,10 +46,4 @@ runtime/nerdctl → scripts/{category}/{tool_name}
 内网地址 → http://192.168.0.180:8082/scripts/{category}/{tool_name}
 ```
 
----
 
-## 3.4 文档输出位置
-
-```bash
-${MIRROR_LOCAL_ROOT}\scripts\{output_dir}\README.md
-```
