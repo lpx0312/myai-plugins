@@ -1,0 +1,25 @@
+{
+  "skill_name": "software-release-downloader",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我为 kubernetes-sigs/cri-tools 创建一个下载脚本，支持下载 crictl 的所有稳定版本，放到 runtime/crictl 目录下",
+      "expected_output": "生成 runtime/crictl/crictl-downloader.sh 和 download.sh，支持多版本下载、arm64/amd64 双架构、代理设置、GitHub Token",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "请参照 nerdctl-downloader.sh 模板，为 containerd 创建下载脚本，文件名模式是 containerd-{version}-linux-{arch}.tar.gz，放到 runtime/containerd 目录",
+      "expected_output": "生成 runtime/containerd/containerd-downloader.sh 和 download.sh，复用 nerdctl 模板结构但替换工具特定部分",
+      "files": [
+        "runtime/nerdctl/nerdctl-downloader.sh"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我需要为 docker/docker-ce 的 linuxkit/containerd-tools 写个下载脚本，支持通过代理访问 GitHub，文件格式是 {tool}-{version}-{os}-{arch}.tar.gz",
+      "expected_output": "生成对应目录下的下载脚本和入口脚本，支持代理、Token、版本过滤、dry-run 模式",
+      "files": []
+    }
+  ]
+}
