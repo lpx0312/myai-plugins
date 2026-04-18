@@ -246,6 +246,8 @@ fi
 ```bash
 #!/bin/bash
 
+CURRENT_DIR=$(cd `dirname $0`; pwd)
+
 # 检查必需的环境变量
 if [[ -z "${GITHUB_TOKEN}" ]]; then
     echo  "[ ERROR ]: GITHUB_TOKEN 环境变量未设置"
@@ -262,11 +264,17 @@ if [[ -z "${HTTPS_PROXY}" ]]; then
     exit 1
 fi
 
-CURRENT_DIR=$(cd `dirname $0`; pwd)
+
+# 判断是否带 -n
+EXTRA_ARGS=""
+if [[ "$1" == "-n" ]]; then
+    EXTRA_ARGS="-n"
+fi
+
 # 可以保留注释的旧命令作为备份
 #bash {name}-downloader.sh -p http://192.168.0.225:7897 -t xxxx -V -d ${CURRENT_DIR}
 
-bash {name}-downloader.sh -p "${HTTPS_PROXY}" -t "${GITHUB_TOKEN}" -V -d "${CURRENT_DIR}"
+bash {name}-downloader.sh -p "${HTTPS_PROXY}" -t "${GITHUB_TOKEN}" -V -d "${CURRENT_DIR}" ${EXTRA_ARGS}
 ```
 
 **入口脚本说明：**
@@ -321,9 +329,7 @@ cp /c/Users/lipanx/.claude/projects/z--soft/runtime/docker_tools/image-syncer/*.
    ```bash
    ./download.sh -n
    ```
-3. 检查 URL 可用性
-
-4. 下载少量版本测试
+   只要模式测试通过，就说明脚本可以交付了，不需要其他测试了
 
 ## 文件命名规则示例
 
