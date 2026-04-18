@@ -110,6 +110,8 @@ description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当
    - 将 `http://mirrors.lpx.com` 替换为 `${MIRROR_LOCAL_ROOT}`（注意路径分隔符转换）
    - 示例：`http://mirrors.lpx.com/soft/runtime/nerdctl/nerdctl-downloader.sh`
      → `${MIRROR_LOCAL_ROOT}\soft\runtime\nerdctl\nerdctl-downloader.sh`
+    
+- 注意: 如果mirrors.lpx.com 域名无法访问，可以使用mirror-file-manager skill 来变化成内网IP地址
 
 **必须遵守的关键规则：**
 
