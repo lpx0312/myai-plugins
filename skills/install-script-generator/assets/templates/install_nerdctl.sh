@@ -32,6 +32,8 @@ DELETE_PACKAGE=true
 
 # 调试模式
 DEBUG=false
+# HTTP 代理
+HTTP_PROXY=""
 
 # 网络类型（内网/外网）
 NETWORK_TYPE=""
@@ -83,6 +85,7 @@ nerdctl 自动安装脚本 - 支持多种 nerdctl 版本和架构
   -e, --internet-base <URL> 外网基础 URL
   -u, --url <URL>           直接指定 nerdctl 下载 URL (优先级最高)
   -d, --dir <目录>          安装目录 [默认: /usr/local]
+  -p, --proxy <PROXY>       HTTP 代理 (例如: http://192.168.0.4:7890)
   --download-dir <目录>     下载目录 [默认: /tmp]
   --keep-package            保留安装包 (默认删除)
   --debug                   启用调试模式
@@ -213,6 +216,10 @@ parse_args() {
                 DOWNLOAD_DIR="$2"
                 shift 2
                 ;;
+            -p|--proxy)
+                HTTP_PROXY="$2"
+                shift 2
+                ;;
             --keep-package)
                 DELETE_PACKAGE=false
                 shift
@@ -263,6 +270,7 @@ parse_args() {
     log_debug "  NERDCTL_FILE_URL: ${NERDCTL_FILE_URL:-自动构建}"
     log_debug "  INSTALL_DIR: $INSTALL_DIR"
     log_debug "  DOWNLOAD_DIR: $DOWNLOAD_DIR"
+    log_debug "  HTTP_PROXY: ${HTTP_PROXY:-未设置}"
     log_debug "  DELETE_PACKAGE: $DELETE_PACKAGE"
 }
 
@@ -494,17 +502,28 @@ main() {
     if [ "$DIR_EXISTS" = false ] && [ "$ZIP_SOFT_EXISTS" = false ]; then
         log_info "开始下载 ${NERDCTL_FILE_URL} 到 ${DOWNLOAD_DIR}"
 
-        # 使用 wget 或 curl 下载
+        # 构建下载命令
         if command -v wget &> /dev/null; then
-            wget -O "${DOWNLOAD_DIR}/${NERDCTL_FILE}" "$NERDCTL_FILE_URL" || {
+            local download_cmd="wget -O \"${DOWNLOAD_DIR}/${NERDCTL_FILE}\" \"$NERDCTL_FILE_URL\""
+            if [ -n "$HTTP_PROXY" ]; then
+                download_cmd="export http_proxy=\"$HTTP_PROXY\" https_proxy=\"$HTTP_PROXY\"; $download_cmd"
+            fi
+            eval "$download_cmd" || {
                 log_error "下载失败"
                 exit 1
             }
         elif command -v curl &> /dev/null; then
-            curl -L -o "${DOWNLOAD_DIR}/${NERDCTL_FILE}" "$NERDCTL_FILE_URL" || {
-                log_error "下载失败"
-                exit 1
-            }
+            if [ -n "$HTTP_PROXY" ]; then
+                curl -L -x "$HTTP_PROXY" -o "${DOWNLOAD_DIR}/${NERDCTL_FILE}" "$NERDCTL_FILE_URL" || {
+                    log_error "下载失败"
+                    exit 1
+                }
+            else
+                curl -L -o "${DOWNLOAD_DIR}/${NERDCTL_FILE}" "$NERDCTL_FILE_URL" || {
+                    log_error "下载失败"
+                    exit 1
+                }
+            fi
         else
             log_error "系统未安装 wget 或 curl，无法下载"
             exit 1
@@ -512,7 +531,6 @@ main() {
 
         log_info "下载完成"
     fi
-
     # 6. 如果软件未安装,创建安装路径并解压
     if [ "$DIR_EXISTS" = false ]; then
         log_info "创建软件安装路径: ${NERDCTL_INSTALL_PATH}"

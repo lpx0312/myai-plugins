@@ -43,7 +43,7 @@ DEBUG=false
 NETWORK_TYPE=""
 
 # 内网基础 URL
-INTRANET_BASE="http://192.168.0.180:8082/soft/runtime/runc"
+INTRANET_BASE=""
 
 # 外网基础 URL
 INTERNET_BASE=""
@@ -91,7 +91,7 @@ runc 自动安装脚本 - 支持多种 runc 版本和架构
   -d, --dir <目录>          安装目录 [默认: /usr/local]
   --download-dir <目录>     下载目录 [默认: /tmp]
   -i, --intranet-base <URL> 内网基础 URL [默认: http://192.168.0.180:8082/soft/runtime/runc]
-  -e, --internet-base <URL> 外网基础 URL
+  -e, --internet-base <URL> 外网基础 URL [默认: https://github.com/opencontainers/runc/releases/download]
   --keep-package            保留安装包 (默认删除)
   --debug                   启用调试模式
   -h, --help                显示此帮助信息
@@ -435,48 +435,14 @@ build_runc_url() {
 
     if [ "$NETWORK_TYPE" = "in" ]; then
         # 内网环境：直接构建 URL（版本号需要 v 前缀）
-        RUNC_FILE_URL="${INTRANET_BASE}/v${RUNC_VERSION}/${RUNC_FILE}"
+        RUNC_FILE_URL="${INTRANET_BASE:-http://192.168.0.180:8082/soft/runtime/runc}/v${RUNC_VERSION}/${RUNC_FILE}"
         log_info "使用内网镜像构建下载 URL"
     else
-        # 外网环境：通过 GitHub API 获取下载链接
-        log_info "正在从 GitHub API 获取下载链接..."
-
-        local API_URL="https://api.github.com/repos/${GITHUB_REPO}/releases/tags/v${RUNC_VERSION}"
-        local curl_cmd="curl -s"
-
-        # 添加代理
-        if [ -n "$HTTP_PROXY" ]; then
-            curl_cmd="$curl_cmd -x \"$HTTP_PROXY\""
-            log_debug "使用代理: $HTTP_PROXY"
-        fi
-
-        # 添加 Token 认证
-        if [ -n "$GITHUB_TOKEN" ]; then
-            curl_cmd="$curl_cmd -H \"Authorization: token $GITHUB_TOKEN\""
-            log_debug "使用 GitHub Token 认证"
-        fi
-
-        # 调用 GitHub API
-        local api_response
-        api_response=$(eval "$curl_cmd \"$API_URL\"") || {
-            log_error "GitHub API 调用失败"
-            log_info "如果遇到速率限制，请使用 --token 参数提供 GitHub Token"
-            log_info "如果需要代理，请使用 --proxy 参数"
-            exit 1
-        }
-
-        # 解析 API 响应获取浏览器下载 URL
-        # 使用 sed 提取 JSON 中的 browser_download_url 字段
-        RUNC_FILE_URL=$(echo "$api_response" | sed -n 's/.*"browser_download_url": *"\([^"]*\)".*/\1/p' | grep "$RUNC_FILE" | head -1)
-
-        if [ -z "$RUNC_FILE_URL" ]; then
-            log_error "无法从 GitHub API 获取 runc ${RUNC_VERSION} (${URL_ARCH}) 的下载链接"
-            log_info "请检查版本号和架构是否正确"
-            log_info "访问 https://github.com/${GITHUB_REPO}/releases 查看可用版本"
-            exit 1
-        fi
-
-        log_debug "GitHub API 响应成功"
+        # 外网镜像基础 URL
+        local INTERNET_MIRROR_BASE="${INTERNET_BASE:-https://github.com/opencontainers/runc/releases/download}"
+        # 外网环境：直接构建 URL
+        RUNC_FILE_URL="${INTERNET_MIRROR_BASE}/v${RUNC_VERSION}/${RUNC_FILE}"
+        log_info "使用外网镜像构建下载 URL"
     fi
 
     log_info "构建的下载 URL: $RUNC_FILE_URL"
