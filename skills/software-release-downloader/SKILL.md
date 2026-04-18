@@ -232,13 +232,13 @@ fi
 CURRENT_DIR=$(cd `dirname $0`; pwd)
 # 可以保留注释的旧命令作为备份
 #bash {name}-downloader.sh -p http://192.168.0.225:7897 -t xxxx -V -d ${CURRENT_DIR}
-bash {name}-downloader.sh -p http://192.168.0.4:7890 -t ${GITHUB_TOKEN} -V -d ${CURRENT_DIR}
+bash {name}-downloader.sh -p ${HTTPS_PROXY} -t ${GITHUB_TOKEN} -V -d ${CURRENT_DIR}
 ```
 
 **入口脚本说明：**
 - `CURRENT_DIR` - 获取脚本所在目录的绝对路径
-- 使用固定的代理地址：`http://192.168.0.4:7890`
-- 使用固定的测试 Token：`${GITHUB_TOKEN}`
+- 使用环境变量 `HTTPS_PROXY` 设置下载代理
+- 使用环境变量 `GITHUB_TOKEN` 设置 GitHub 访问令牌
 - 启用验证模式：`-V`    
 - 下载到脚本所在目录
 
@@ -349,7 +349,7 @@ verify_tarball() {
 
 ```bash
 # 代理地址
-PROXY="http://192.168.0.4:7890"
+PROXY="${HTTPS_PROXY}"
 
 # GitHub Token（测试用）
 TOKEN="${GITHUB_TOKEN}"
@@ -389,8 +389,8 @@ bash scripts/check_release_files.sh containerd containerd v1.7.0
    # 方式2：直接使用下载脚本
    ./{name}-downloader.sh --help
    ./{name}-downloader.sh -n              # dry-run 模式
-   ./{name}-downloader.sh -p http://192.168.0.4:7890  # 使用代理
-   ./{name}-downloader.sh -t <token> -V   # 使用 token 并验证
+   ./{name}-downloader.sh -p ${HTTPS_PROXY}  # 使用代理
+   ./{name}-downloader.sh -t ${GITHUB_TOKEN} -V   # 使用 token 并验证
    ```
 
 4. 如果用户有测试机器，建议先在测试环境验证
