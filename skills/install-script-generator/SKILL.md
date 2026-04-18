@@ -44,11 +44,11 @@ description: 自动生成 Linux 二进制工具安装脚本的完整工作流。
 
 ## 阶段详情
 
-- [阶段 1: 信息收集](./phases/01-information.md)
-- [阶段 2: 脚本编写](./phases/02-scripting.md)
-- [阶段 3: 文档编写](./phases/03-documentation.md)
-- [阶段 4: 远程测试](./phases/04-testing.md)
-- [阶段 5: 上传验证](./phases/05-upload.md)
+- [阶段 1: 信息收集](./references/01-information.md)
+- [阶段 2: 脚本编写](./references/02-scripting.md)
+- [阶段 3: 文档编写](./references/03-documentation.md)
+- [阶段 4: 远程测试](./references/04-testing.md)
+- [阶段 5: 上传验证](./references/05-upload.md)
 
 ---
 
