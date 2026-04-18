@@ -42,6 +42,12 @@ DEBUG=false
 # 网络类型（内网/外网）
 NETWORK_TYPE=""
 
+# 内网基础 URL
+INTRANET_BASE="http://192.168.0.180:8082/soft/runtime/runc"
+
+# 外网基础 URL
+INTERNET_BASE=""
+
 # ==================== 颜色输出 ====================
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -84,6 +90,8 @@ runc 自动安装脚本 - 支持多种 runc 版本和架构
   -p, --proxy <PROXY>       HTTP 代理 (例如: http://192.168.0.4:7890)
   -d, --dir <目录>          安装目录 [默认: /usr/local]
   --download-dir <目录>     下载目录 [默认: /tmp]
+  -i, --intranet-base <URL> 内网基础 URL [默认: http://192.168.0.180:8082/soft/runtime/runc]
+  -e, --internet-base <URL> 外网基础 URL
   --keep-package            保留安装包 (默认删除)
   --debug                   启用调试模式
   -h, --help                显示此帮助信息
@@ -166,8 +174,8 @@ parse_args() {
     local parsed_options
 
     parsed_options=$(getopt \
-        -o v:a:n:u:t:p:d:h \
-        --long version:,arch:,network:,url:,token:,proxy:,dir:,download-dir:,keep-package,debug,help \
+        -o v:a:n:u:t:p:d:i:e:h \
+        --long version:,arch:,network:,url:,token:,proxy:,dir:,download-dir:,intranet-base:,internet-base:,keep-package,debug,help \
         -- "$@")
 
     if [ $? -ne 0 ]; then
@@ -209,6 +217,14 @@ parse_args() {
                 ;;
             --download-dir)
                 DOWNLOAD_DIR="$2"
+                shift 2
+                ;;
+            -i|--intranet-base)
+                INTRANET_BASE="$2"
+                shift 2
+                ;;
+            -e|--internet-base)
+                INTERNET_BASE="$2"
                 shift 2
                 ;;
             --keep-package)
@@ -407,8 +423,7 @@ build_runc_url() {
 
     log_info "根据版本和架构构建下载 URL..."
 
-    # 内网镜像基础 URL
-    local INTRANET_BASE="http://192.168.0.180:8082/soft/runtime/runc"
+    # 内网镜像基础 URL（已在配置区定义，此处直接使用全局变量）
 
     # 外网 GitHub 仓库
     local GITHUB_REPO="opencontainers/runc"

@@ -36,6 +36,12 @@ DEBUG=false
 # 网络类型（内网/外网）
 NETWORK_TYPE=""
 
+# 内网基础 URL
+INTRANET_BASE=""
+
+# 外网基础 URL
+INTERNET_BASE=""
+
 # ==================== 颜色输出 ====================
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -73,6 +79,8 @@ nerdctl 自动安装脚本 - 支持多种 nerdctl 版本和架构
   -v, --version <版本>      nerdctl 版本 (例如: 2.2.1, 2.0.0, 1.7.7)
   -a, --arch <架构>         系统架构 (x64, arm64) [默认: 自动检测]
   -n, --network <网络>      网络类型 (in, out) [默认: 自动检测]
+  -i, --intranet-base <URL> 内网基础 URL
+  -e, --internet-base <URL> 外网基础 URL
   -u, --url <URL>           直接指定 nerdctl 下载 URL (优先级最高)
   -d, --dir <目录>          安装目录 [默认: /usr/local]
   --download-dir <目录>     下载目录 [默认: /tmp]
@@ -160,8 +168,8 @@ parse_args() {
     local parsed_options
 
     parsed_options=$(getopt \
-        -o v:a:n:u:d:h \
-        --long version:,arch:,network:,url:,dir:,download-dir:,keep-package,debug,help \
+        -o v:a:n:i:e:u:d:h \
+        --long version:,arch:,network:,intranet-base:,internet-base:,url:,dir:,download-dir:,keep-package,debug,help \
         -- "$@")
 
     if [ $? -ne 0 ]; then
@@ -183,6 +191,14 @@ parse_args() {
                 ;;
             -n|--network)
                 NETWORK_TYPE="$2"
+                shift 2
+                ;;
+            -i|--intranet-base)
+                INTRANET_BASE="$2"
+                shift 2
+                ;;
+            -e|--internet-base)
+                INTERNET_BASE="$2"
                 shift 2
                 ;;
             -u|--url)
@@ -391,15 +407,15 @@ build_nerdctl_url() {
 
     log_info "根据版本和架构构建下载 URL..."
 
-    # 内网镜像基础 URL
-    local INTRANET_BASE="http://192.168.0.180:8082/soft/runtime/nerdctl"
+    # 内网镜像基础 URL (使用参数值或默认值)
+    local INTRANET_MIRROR_BASE="${INTRANET_BASE:-http://192.168.0.180:8082/soft/runtime/nerdctl}"
 
-    # 外网镜像基础 URL
-    local INTERNET_BASE="https://github.com/containerd/nerdctl/releases/download"
+    # 外网镜像基础 URL (使用参数值或默认值)
+    local INTERNET_MIRROR_BASE="${INTERNET_BASE:-https://github.com/containerd/nerdctl/releases/download}"
 
     # 根据网络类型选择基础 URL
     local MIRROR_BASE
-    [ "$NETWORK_TYPE" = "in" ] && MIRROR_BASE="$INTRANET_BASE" || MIRROR_BASE="$INTERNET_BASE"
+    [ "$NETWORK_TYPE" = "in" ] && MIRROR_BASE="$INTRANET_MIRROR_BASE" || MIRROR_BASE="$INTERNET_MIRROR_BASE"
 
     # 验证版本号格式 (x.y.z)
     if ! [[ "$NERDCTL_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then

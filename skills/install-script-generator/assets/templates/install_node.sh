@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #############################################
-# kubectl 自动安装脚本 v1.0
-# 功能：自动下载并安装 kubectl
-# 支持多种 kubectl 版本和架构
+# Node.js 自动安装脚本 v1.0
+# 功能：自动下载并安装 Node.js
+# 支持多种 Node.js 版本和架构
 # 支持内网/外网环境自动检测
 #############################################
 
@@ -12,20 +12,14 @@ set -o pipefail
 
 # ==================== 默认配置 ====================
 
-# kubectl 版本
-KUBECTL_VERSION=""
+# Node.js 版本
+NODE_VERSION=""
 
 # 系统架构 (x64, arm64)
 ARCH=""
 
-# kubectl 下载 URL（优先级最高）
-KUBECTL_FILE_URL=""
-
-# GitHub Token（用于访问 GitHub API）
-GITHUB_TOKEN=""
-
-# HTTP 代理
-HTTP_PROXY=""
+# Node.js 下载 URL（优先级最高）
+NODE_FILE_URL=""
 
 # 安装目录
 INSTALL_DIR="/usr/local"
@@ -41,6 +35,12 @@ DEBUG=false
 
 # 网络类型（内网/外网）
 NETWORK_TYPE=""
+
+# 内网基础 URL
+INTRANET_BASE_URL=""
+
+# 外网基础 URL
+INTERNET_BASE_URL=""
 
 # ==================== 颜色输出 ====================
 GREEN='\033[0;32m'
@@ -67,77 +67,12 @@ log_debug() {
     fi
 }
 
-# ==================== 帮助信息 ====================
-
-usage() {
-    cat <<EOF
-用法: $0 [选项]
-
-kubectl 自动安装脚本 - 支持多种 kubectl 版本和架构
-
-选项:
-  -v, --version <版本>      kubectl 版本 (例如: 1.32.0, 1.31.0, 1.30.0)
-  -a, --arch <架构>         系统架构 (x64, arm64) [默认: 自动检测]
-  -n, --network <网络>      网络类型 (in, out) [默认: 自动检测]
-  -u, --url <URL>           直接指定 kubectl 下载 URL (优先级最高)
-  -t, --token <TOKEN>       GitHub Token (用于访问 GitHub API)
-  -p, --proxy <PROXY>       HTTP 代理 (例如: http://192.168.0.4:7890)
-  -d, --dir <目录>          安装目录 [默认: /usr/local]
-  --download-dir <目录>     下载目录 [默认: /tmp]
-  --keep-package            保留安装包 (默认删除)
-  --debug                   启用调试模式
-  -h, --help                显示此帮助信息
-
-示例:
-  # 安装 kubectl 1.32.0 (自动检测架构)
-  $0 -v 1.32.0
-
-  # 安装 kubectl 1.31.0 (arm64 架构)
-  $0 -v 1.31.0 -a arm64
-
-  # 指定内网环境安装 (跳过网络检测)
-  $0 -v 1.32.0 -n in
-
-  # 使用 GitHub Token 和代理安装
-  $0 -v 1.32.0 -t ghp_xxx -p http://192.168.0.4:7890
-
-  # 使用自定义 URL 安装
-  $0 -u https://dl.k8s.io/release/v1.32.0/bin/linux/amd64/kubectl
-
-  # 安装到指定目录并保留安装包
-  $0 -v 1.32.0 -d /opt/kubectl --keep-package
-
-支持的版本系列:
-  - 1.32.x  v1.32.0 ~ v1.32.3 (最新稳定版)
-  - 1.31.x  v1.31.0 ~ v1.31.5
-  - 1.30.x  v1.30.0 ~ v1.30.6
-  - 1.29.x  v1.29.0 ~ v1.29.14
-  - 1.28.x  v1.28.0 ~ v1.28.15
-
-支持的架构:
-  - x64             Intel/AMD 64位
-  - arm64/aarch64   ARM 64位
-
-注意:
-  1. 如果指定 --url，则 --arch、--version 参数将被忽略
-  2. 如果不指定 --arch，脚本会自动检测系统架构
-  3. 如果不指定 --network，脚本会自动检测内网/外网环境
-  4. 需要写入系统路径时会自动使用 sudo（建议用有 sudo 权限的用户运行）
-  5. kubectl 是 Kubernetes 命令行工具，用于与集群通信
-
-EOF
-    exit 0
-}
-
-# ==================== sudo 兼容 ====================
-
 SUDO_CMD=()
 if [ "$(id -u)" -ne 0 ]; then
     if command -v sudo &>/dev/null; then
-        # -n: 非交互模式，避免脚本卡住等待输入密码
         SUDO_CMD=(sudo -n)
     else
-        log_error "未找到 sudo，且当前用户不是 root。请以 root 运行，或安装/配置 sudo。" >&2
+        log_error "未找到 sudo，且当前用户不是 root。请以 root 运行，或安装/配置 sudo。"
         exit 1
     fi
 fi
@@ -157,11 +92,74 @@ run_with_fallback() {
 ensure_dir() {
     local dir="$1"
     local desc="$2"
-
     if [ ! -d "$dir" ]; then
         log_info "创建${desc}: ${dir}"
         mkdir -p "$dir" 2>/dev/null || run_root mkdir -p "$dir"
     fi
+}
+
+# ==================== 帮助信息 ====================
+
+usage() {
+    cat <<EOF
+用法: $0 [选项]
+
+Node.js 自动安装脚本 - 支持多种 Node.js 版本和架构
+
+选项:
+  -v, --version <版本>      Node.js 版本 (例如: 10, 12, 14, 16, 18, 20, 22, 24)
+  -a, --arch <架构>         系统架构 (x64, arm64) [默认: 自动检测]
+  -n, --network <网络>      网络类型 (in, out) [默认: 自动检测]
+  -u, --url <URL>           直接指定 Node.js 下载 URL (优先级最高)
+  -i, --intranet-base <URL> 内网基础 URL
+  -e, --internet-base <URL> 外网基础 URL
+  -d, --dir <目录>          安装目录 [默认: /usr/local]
+  --download-dir <目录>     下载目录 [默认: /tmp]
+  --keep-package            保留安装包 (默认删除)
+  --debug                   启用调试模式
+  -h, --help                显示此帮助信息
+
+示例:
+  # 安装 Node.js 20 (自动检测架构)
+  $0 -v 20
+
+  # 安装 Node.js 18 (arm64 架构)
+  $0 -v 18 -a arm64
+
+  # 指定内网环境安装 (跳过网络检测)
+  $0 -v 20 -n in
+
+  # 指定外网环境安装 (跳过网络检测)
+  $0 -v 20 -n out
+
+  # 使用自定义 URL 安装
+  $0 -u https://nodejs.org/dist/v20.19.0/node-v20.19.0-linux-x64.tar.gz
+
+  # 安装到指定目录并保留安装包
+  $0 -v 20 -d /opt/nodejs --keep-package
+
+支持的版本:
+  - 10      Node.js v10.x (已停止维护)
+  - 12      Node.js v12.x (已停止维护)
+  - 14      Node.js v14.x (已停止维护)
+  - 16      Node.js v16.x (已停止维护)
+  - 18      Node.js v18.x (LTS - 维护到 2025-04)
+  - 20      Node.js v20.x (LTS - 维护到 2026-04)
+  - 22      Node.js v22.x (LTS - 维护到 2027-04)
+  - 24      Node.js v24.x (Current - 当前版本)
+
+支持的架构:
+  - x64             Intel/AMD 64位
+  - arm64/aarch64   ARM 64位
+
+注意:
+  1. 如果指定 --url，则 --arch、--version 参数将被忽略
+  2. 如果不指定 --arch，脚本会自动检测系统架构
+  3. 如果不指定 --network，脚本会自动检测内网/外网环境
+  4. 需要写入系统路径时会自动使用 sudo（建议用有 sudo 权限的用户运行）
+
+EOF
+    exit 0
 }
 
 # ==================== 参数解析 ====================
@@ -170,8 +168,8 @@ parse_args() {
     local parsed_options
 
     parsed_options=$(getopt \
-        -o v:a:n:u:t:p:d:h \
-        --long version:,arch:,network:,url:,token:,proxy:,dir:,download-dir:,keep-package,debug,help \
+        -o v:a:n:u:d:i:e:h \
+        --long version:,arch:,network:,url:,dir:,download-dir:,intranet-base:,internet-base:,keep-package,debug,help \
         -- "$@")
 
     if [ $? -ne 0 ]; then
@@ -184,7 +182,7 @@ parse_args() {
     while true; do
         case "$1" in
             -v|--version)
-                KUBECTL_VERSION="$2"
+                NODE_VERSION="$2"
                 shift 2
                 ;;
             -a|--arch)
@@ -196,15 +194,15 @@ parse_args() {
                 shift 2
                 ;;
             -u|--url)
-                KUBECTL_FILE_URL="$2"
+                NODE_FILE_URL="$2"
                 shift 2
                 ;;
-            -t|--token)
-                GITHUB_TOKEN="$2"
+            -i|--intranet-base)
+                INTRANET_BASE_URL="$2"
                 shift 2
                 ;;
-            -p|--proxy)
-                HTTP_PROXY="$2"
+            -e|--internet-base)
+                INTERNET_BASE_URL="$2"
                 shift 2
                 ;;
             -d|--dir)
@@ -238,8 +236,8 @@ parse_args() {
     done
 
     # 验证必需参数
-    if [ -z "$KUBECTL_FILE_URL" ] && [ -z "$KUBECTL_VERSION" ]; then
-        log_error "必须指定 kubectl 版本 (-v/--version) 或下载 URL (-u/--url)"
+    if [ -z "$NODE_FILE_URL" ] && [ -z "$NODE_VERSION" ]; then
+        log_error "必须指定 Node.js 版本 (-v/--version) 或下载 URL (-u/--url)"
         log_info "使用 --help 查看详细用法"
         exit 1
     fi
@@ -259,12 +257,10 @@ parse_args() {
     fi
 
     log_debug "参数解析完成:"
-    log_debug "  KUBECTL_VERSION: ${KUBECTL_VERSION:-未指定}"
+    log_debug "  NODE_VERSION: ${NODE_VERSION:-未指定}"
     log_debug "  ARCH: ${ARCH:-自动检测}"
     log_debug "  NETWORK_TYPE: ${NETWORK_TYPE:-自动检测}"
-    log_debug "  KUBECTL_FILE_URL: ${KUBECTL_FILE_URL:-自动构建}"
-    log_debug "  GITHUB_TOKEN: ${GITHUB_TOKEN:+已设置}"
-    log_debug "  HTTP_PROXY: ${HTTP_PROXY:-未设置}"
+    log_debug "  NODE_FILE_URL: ${NODE_FILE_URL:-自动构建}"
     log_debug "  INSTALL_DIR: $INSTALL_DIR"
     log_debug "  DOWNLOAD_DIR: $DOWNLOAD_DIR"
     log_debug "  DELETE_PACKAGE: $DELETE_PACKAGE"
@@ -322,7 +318,7 @@ detect_arch() {
             ;;
         i686|i386)
             log_warn "警告: 检测到 32 位系统 ($sys_arch)"
-            log_warn "kubectl 不提供 32 位版本的预编译包"
+            log_warn "Node.js 不提供 32 位版本的预编译包"
             log_warn "将使用默认架构: x64 (可能失败)"
             ARCH="x64"
             ;;
@@ -399,10 +395,10 @@ detect_network() {
 
 # ==================== URL 构建 ====================
 
-build_kubectl_url() {
+build_node_url() {
     # 如果已经指定了 URL,直接使用(优先级最高,不检测架构)
-    if [ -n "$KUBECTL_FILE_URL" ]; then
-        log_info "使用指定的下载 URL: $KUBECTL_FILE_URL"
+    if [ -n "$NODE_FILE_URL" ]; then
+        log_info "使用指定的下载 URL: $NODE_FILE_URL"
         return
     fi
 
@@ -412,63 +408,53 @@ build_kubectl_url() {
     log_info "根据版本和架构构建下载 URL..."
 
     # 内网镜像基础 URL
-    local INTRANET_BASE="http://192.168.0.180:8082/soft/k8s/kubectl"
+    local INTRANET_BASE="${INTRANET_BASE_URL:-http://192.168.0.180:8082/soft/node}"
 
-    # 外网 Kubernetes 下载仓库
-    local K8S_REPO="kubernetes/kubernetes"
+    # 外网镜像基础 URL
+    local INTERNET_BASE="${INTERNET_BASE_URL:-https://nodejs.org/dist}"
 
-    # 构建文件名（kubectl 使用 kubectl.amd64/kubectl.arm64 格式）
-    local URL_ARCH
-    [ "$ARCH" = "x64" ] && URL_ARCH="amd64" || URL_ARCH="arm64"
-    local KUBECTL_FILE="kubectl.${URL_ARCH}"
+    # 根据网络类型选择基础 URL
+    local MIRROR_BASE
+    [ "$NETWORK_TYPE" = "in" ] && MIRROR_BASE="$INTRANET_BASE" || MIRROR_BASE="$INTERNET_BASE"
 
-    if [ "$NETWORK_TYPE" = "in" ]; then
-        # 内网环境：直接构建 URL（版本号需要 v 前缀）
-        KUBECTL_FILE_URL="${INTRANET_BASE}/v${KUBECTL_VERSION}/kubectl.${URL_ARCH}"
-        log_info "使用内网镜像构建下载 URL"
-    else
-        # 外网环境：通过 GitHub API 获取下载链接
-        log_info "正在从 GitHub API 获取下载链接..."
-
-        local API_URL="https://api.github.com/repos/${K8S_REPO}/releases/tags/v${KUBECTL_VERSION}"
-        local curl_cmd="curl -s"
-
-        # 添加代理
-        if [ -n "$HTTP_PROXY" ]; then
-            curl_cmd="$curl_cmd -x \"$HTTP_PROXY\""
-            log_debug "使用代理: $HTTP_PROXY"
-        fi
-
-        # 添加 Token 认证
-        if [ -n "$GITHUB_TOKEN" ]; then
-            curl_cmd="$curl_cmd -H \"Authorization: token $GITHUB_TOKEN\""
-            log_debug "使用 GitHub Token 认证"
-        fi
-
-        # 调用 GitHub API
-        local api_response
-        api_response=$(eval "$curl_cmd \"$API_URL\"") || {
-            log_error "GitHub API 调用失败"
-            log_info "如果遇到速率限制，请使用 --token 参数提供 GitHub Token"
-            log_info "如果需要代理，请使用 --proxy 参数"
+    # 根据版本构建具体版本号
+    local FULL_VERSION=""
+    case "$NODE_VERSION" in
+        10)
+            FULL_VERSION="10.24.1"
+            ;;
+        12)
+            FULL_VERSION="12.22.12"
+            ;;
+        14)
+            FULL_VERSION="14.21.3"
+            ;;
+        16)
+            FULL_VERSION="16.20.2"
+            ;;
+        18)
+            FULL_VERSION="18.20.5"
+            ;;
+        20)
+            FULL_VERSION="20.18.1"
+            ;;
+        22)
+            FULL_VERSION="22.12.0"
+            ;;
+        24)
+            FULL_VERSION="24.14.0"
+            ;;
+        *)
+            log_error "不支持的 Node.js 版本: $NODE_VERSION"
+            log_info "支持的版本: 10, 12, 14, 16, 18, 20, 22, 24"
             exit 1
-        }
+            ;;
+    esac
 
-        # 解析 API 响应获取浏览器下载 URL
-        # kubectl 下载 URL 格式: https://dl.k8s.io/release/v{version}/bin/linux/{arch}/kubectl
-        KUBECTL_FILE_URL=$(echo "$api_response" | sed -n 's/.*"browser_download_url": *"\([^"]*\)".*/\1/p' | grep "linux/${URL_ARCH}/kubectl$" | head -1)
+    # 构建完整的下载 URL
+    NODE_FILE_URL="${MIRROR_BASE}/v${FULL_VERSION}/node-v${FULL_VERSION}-linux-${ARCH}.tar.gz"
 
-        if [ -z "$KUBECTL_FILE_URL" ]; then
-            log_error "无法从 GitHub API 获取 kubectl ${KUBECTL_VERSION} (${URL_ARCH}) 的下载链接"
-            log_info "请检查版本号和架构是否正确"
-            log_info "访问 https://github.com/${K8S_REPO}/releases 查看可用版本"
-            exit 1
-        fi
-
-        log_debug "GitHub API 响应成功"
-    fi
-
-    log_info "构建的下载 URL: $KUBECTL_FILE_URL"
+    log_info "构建的下载 URL: $NODE_FILE_URL"
 }
 
 # ==================== 主逻辑 ====================
@@ -480,25 +466,27 @@ main() {
     # 检测网络环境
     detect_network
 
-    # 构建 kubectl 下载 URL (内部会检测架构)
-    build_kubectl_url
+    # 构建 Node.js 下载 URL (内部会检测架构)
+    build_node_url
 
     # 从 URL 提取文件名
-    local KUBECTL_FILE=$(basename "$KUBECTL_FILE_URL")
+    local NODE_FILE=$(basename "$NODE_FILE_URL")
 
     # 安装路径配置
-    local KUBECTL_INSTALL_PATH="${INSTALL_DIR}/kubectl-${KUBECTL_VERSION:-custom}"
+    local NODE_INSTALL_PATH="${INSTALL_DIR}/node-${NODE_VERSION:-custom}"
+    local NODE_PATH="${INSTALL_DIR}/node"
+    local NODE_HOME="${NODE_PATH}"
 
     log_info "========================================="
-    log_info "开始安装 kubectl"
+    log_info "开始安装 Node.js"
     log_info "========================================="
-    log_info "kubectl 版本:      ${KUBECTL_VERSION:-自定义}"
-    log_info "系统架构:       ${ARCH}"
-    log_info "网络类型:       ${NETWORK_TYPE}"
-    log_info "下载地址:       ${KUBECTL_FILE_URL}"
-    log_info "安装路径:       ${KUBECTL_INSTALL_PATH}"
-    log_info "下载目录:       ${DOWNLOAD_DIR}"
-    log_info "删除安装包:     ${DELETE_PACKAGE}"
+    log_info "Node.js 版本:  ${NODE_VERSION:-自定义}"
+    log_info "系统架构:      ${ARCH}"
+    log_info "网络类型:      ${NETWORK_TYPE}"
+    log_info "下载地址:      ${NODE_FILE_URL}"
+    log_info "安装路径:      ${NODE_INSTALL_PATH}"
+    log_info "下载目录:      ${DOWNLOAD_DIR}"
+    log_info "删除安装包:    ${DELETE_PACKAGE}"
     log_info "========================================="
 
     # 1. 如果安装目录不存在就创建
@@ -512,16 +500,16 @@ main() {
     fi
 
     # 3. 判断软件安装目录是否存在
-    if [ -d "$KUBECTL_INSTALL_PATH" ]; then
-        log_warn "软件安装目录 ${KUBECTL_INSTALL_PATH} 已存在，跳过安装"
+    if [ -d "$NODE_INSTALL_PATH" ]; then
+        log_warn "软件安装目录 ${NODE_INSTALL_PATH} 已存在，跳过安装"
         DIR_EXISTS=true
     else
         DIR_EXISTS=false
     fi
 
     # 4. 判断安装包是否存在
-    if [ -f "${DOWNLOAD_DIR}/${KUBECTL_FILE}" ]; then
-        log_info "安装包 ${KUBECTL_FILE} 已存在"
+    if [ -f "${DOWNLOAD_DIR}/${NODE_FILE}" ]; then
+        log_info "安装包 ${NODE_FILE} 已存在"
         ZIP_SOFT_EXISTS=true
     else
         ZIP_SOFT_EXISTS=false
@@ -529,89 +517,90 @@ main() {
 
     # 5. 如果软件未安装且安装包不存在，则下载
     if [ "$DIR_EXISTS" = false ] && [ "$ZIP_SOFT_EXISTS" = false ]; then
-        log_info "开始下载 ${KUBECTL_FILE_URL} 到 ${DOWNLOAD_DIR}"
+        log_info "开始下载 ${NODE_FILE_URL} 到 ${DOWNLOAD_DIR}"
 
-        # 构建下载命令
-        local download_cmd=""
+        # 使用 wget 或 curl 下载
         if command -v wget &> /dev/null; then
-            download_cmd="wget -O \"${DOWNLOAD_DIR}/${KUBECTL_FILE}\" \"$KUBECTL_FILE_URL\""
-            # 添加代理支持
-            if [ -n "$HTTP_PROXY" ]; then
-                download_cmd="export http_proxy=\"$HTTP_PROXY\" https_proxy=\"$HTTP_PROXY\"; $download_cmd"
-            fi
+            wget -O "${DOWNLOAD_DIR}/${NODE_FILE}" "$NODE_FILE_URL" || {
+                log_error "下载失败"
+                exit 1
+            }
         elif command -v curl &> /dev/null; then
-            download_cmd="curl -L -o \"${DOWNLOAD_DIR}/${KUBECTL_FILE}\" \"$KUBECTL_FILE_URL\""
-            # 添加代理支持
-            if [ -n "$HTTP_PROXY" ]; then
-                download_cmd="curl -L -x \"$HTTP_PROXY\" -o \"${DOWNLOAD_DIR}/${KUBECTL_FILE}\" \"$KUBECTL_FILE_URL\""
-            fi
+            curl -L -o "${DOWNLOAD_DIR}/${NODE_FILE}" "$NODE_FILE_URL" || {
+                log_error "下载失败"
+                exit 1
+            }
         else
             log_error "系统未安装 wget 或 curl，无法下载"
             exit 1
         fi
 
-        # 执行下载
-        eval "$download_cmd" || {
-            log_error "下载失败"
-            exit 1
-        }
-
         log_info "下载完成"
     fi
 
-    # 6. 如果软件未安装,创建安装路径并安装
+    # 6. 如果软件未安装,创建安装路径并解压
     if [ "$DIR_EXISTS" = false ]; then
-        log_info "创建软件安装路径: ${KUBECTL_INSTALL_PATH}"
-        run_with_fallback mkdir -p "$KUBECTL_INSTALL_PATH"
+        log_info "创建软件安装路径: ${NODE_INSTALL_PATH}"
+        run_with_fallback mkdir -p "$NODE_INSTALL_PATH"
 
-        log_info "安装 kubectl 到 ${KUBECTL_INSTALL_PATH}"
-        # kubectl 是单个二进制文件，直接复制
-        run_with_fallback cp "${DOWNLOAD_DIR}/${KUBECTL_FILE}" "${KUBECTL_INSTALL_PATH}/kubectl" || {
-            log_error "安装失败"
+        log_info "解压软件到 ${NODE_INSTALL_PATH}"
+        # 解压并去除顶级目录（--strip-components=1）
+        run_with_fallback tar -xzf "${DOWNLOAD_DIR}/${NODE_FILE}" -C "$NODE_INSTALL_PATH" --strip-components=1 || {
+            log_error "解压失败"
             exit 1
         }
 
-        log_info "安装完成"
+        log_info "解压完成"
     fi
 
-    # 7. 创建软连接 /usr/local/kubectl -> /usr/local/kubectl-{version}
-    local KUBECTL_SYMLINK="${INSTALL_DIR}/kubectl"
-    if [ -L "$KUBECTL_SYMLINK" ] || [ -e "$KUBECTL_SYMLINK" ]; then
-        log_warn "软连接 ${KUBECTL_SYMLINK} 已存在，将更新"
-        run_with_fallback rm -f "$KUBECTL_SYMLINK"
+    # 7. 创建软连接 /usr/local/node -> /usr/local/node-{version}
+    if [ -L "$NODE_PATH" ] || [ -e "$NODE_PATH" ]; then
+        log_warn "软连接 ${NODE_PATH} 已存在，将更新"
+        run_with_fallback rm -f "$NODE_PATH"
     fi
-    log_info "创建软连接: ${KUBECTL_SYMLINK} -> ${KUBECTL_INSTALL_PATH}"
-    run_with_fallback ln -s "$KUBECTL_INSTALL_PATH" "$KUBECTL_SYMLINK"
+    log_info "创建软连接: ${NODE_PATH} -> ${NODE_INSTALL_PATH}"
+    run_with_fallback ln -s "$NODE_INSTALL_PATH" "$NODE_PATH"
 
-    # 8. 创建 kubectl 的软连接到 /usr/bin
-    log_info "创建 kubectl 二进制文件软连接"
-    if [ -L "/usr/bin/kubectl" ] || [ -e "/usr/bin/kubectl" ]; then
-        log_warn "/usr/bin/kubectl 已存在，将更新"
-        run_with_fallback rm -f "/usr/bin/kubectl"
-    fi
-    run_with_fallback ln -s "${KUBECTL_INSTALL_PATH}/kubectl" "/usr/bin/kubectl"
-    log_debug "创建软连接: /usr/bin/kubectl -> ${KUBECTL_INSTALL_PATH}/kubectl"
+    # 8. 创建 node 和 npm 的软连接到 /usr/bin
+    log_info "创建 Node.js 二进制文件软连接"
+    for cmd in node npm npx; do
+        if [ -L "/usr/bin/${cmd}" ] || [ -e "/usr/bin/${cmd}" ]; then
+            log_warn "/usr/bin/${cmd} 已存在，将更新"
+            run_with_fallback rm -f "/usr/bin/${cmd}"
+        fi
+        run_with_fallback ln -s "${NODE_INSTALL_PATH}/bin/${cmd}" "/usr/bin/${cmd}"
+        log_debug "创建软连接: /usr/bin/${cmd} -> ${NODE_INSTALL_PATH}/bin/${cmd}"
+    done
 
-    # 9. 设置执行权限
-    log_info "设置执行权限"
-    run_with_fallback chmod +x "${KUBECTL_INSTALL_PATH}/kubectl"
-    run_with_fallback chmod +x "/usr/bin/kubectl"
+    # 9. 设置 NODE_HOME 环境变量
+    ENV_FILE="/etc/profile.d/node_home.sh"
+    log_info "设置 NODE_HOME 环境变量到 ${ENV_FILE}"
+
+    cat <<EOF | run_with_fallback tee "$ENV_FILE" >/dev/null
+export NODE_HOME=${NODE_HOME}
+export PATH=\$NODE_HOME/bin:\$PATH
+EOF
+
+    run_with_fallback chmod 644 "$ENV_FILE"
+    log_info "环境变量配置完成"
 
     # 10. 验证安装
     log_info "验证安装..."
-    if /usr/bin/kubectl version --client &>/dev/null; then
-        log_info "kubectl 安装成功！"
-        /usr/bin/kubectl version --client
+    if node --version 2>&1; then
+        log_info "Node.js 安装成功！"
+        if npm --version 2>&1; then
+            log_info "npm 安装成功！"
+        fi
     else
-        log_warn "kubectl 安装完成，但验证失败。请检查安装路径"
+        log_warn "Node.js 安装完成，但验证失败。可能需要重新加载环境变量: source ${ENV_FILE}"
     fi
 
     # 11. 删除安装包
     if [ "$DELETE_PACKAGE" = true ]; then
-        log_info "删除安装包: ${DOWNLOAD_DIR}/${KUBECTL_FILE}"
-        rm -f "${DOWNLOAD_DIR}/${KUBECTL_FILE}"
+        log_info "删除安装包: ${DOWNLOAD_DIR}/${NODE_FILE}"
+        run_with_fallback rm -f "${DOWNLOAD_DIR}/${NODE_FILE}"
     else
-        log_info "保留安装包: ${DOWNLOAD_DIR}/${KUBECTL_FILE}"
+        log_info "保留安装包: ${DOWNLOAD_DIR}/${NODE_FILE}"
     fi
 
     # 12. 显示安装信息
@@ -622,26 +611,25 @@ main() {
     cat <<EOF
 安装信息:
 ----------------------------------------
-kubectl 版本:      ${KUBECTL_VERSION:-自定义}
-系统架构:       ${ARCH}
-网络类型:       ${NETWORK_TYPE}
-下载地址:       ${KUBECTL_FILE_URL}
-安装路径:       ${KUBECTL_INSTALL_PATH}
-软连接:         ${KUBECTL_SYMLINK}
+Node.js 版本:  ${NODE_VERSION:-自定义}
+系统架构:      ${ARCH}
+网络类型:      ${NETWORK_TYPE}
+下载地址:      ${NODE_FILE_URL}
+安装路径:      ${NODE_INSTALL_PATH}
+软连接:        ${NODE_PATH}
+NODE_HOME:     ${NODE_HOME}
+环境变量文件:  ${ENV_FILE}
 
 使用方法:
-  kubectl version --client
-  kubectl cluster-info
-  kubectl get nodes
+  source ${ENV_FILE}
+  node --version
+  npm --version
+  npx --version
 
-配置 kubectl:
-  kubectl config use-context <context-name>
-  kubectl config view
-
-注意事项:
-  1. kubectl 是 Kubernetes 命令行工具，用于与集群通信
-  2. 配置文件位于: ~/.kube/config (可选)
-  3. 使用 --help 查看所有可用命令
+npm 常用命令:
+  npm config set registry https://registry.npmmirror.com  # 设置淘宝镜像
+  npm install -g <package>                                 # 全局安装包
+  npm update -g                                            # 更新全局包
 ----------------------------------------
 EOF
 }
