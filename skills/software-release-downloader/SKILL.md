@@ -3,6 +3,28 @@ name: software-release-downloader
 description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当用户需要为任何 GitHub 项目（如 containerd, runc, nerdctl, kubectl, helm, terraform 等）创建下载脚本的完整工作流时使用。也适用于用户说"帮我写个安装脚本"、"参照 X 脚本写 Y 脚本"、"给这个项目写个下载器"等场景。
 ---
 
+> ⚠️ **首次使用需设置环境变量**
+>
+> **Windows (PowerShell):**
+> ```powershell
+> $env:MIRROR_LOCAL_ROOT = "Z:\"
+> $env:GITHUB_TOKEN = "ghp_xxxx"
+> ```
+>
+> **Windows (CMD):**
+> ```cmd
+> set MIRROR_LOCAL_ROOT=Z:\
+> set GITHUB_TOKEN=ghp_xxxx
+> ```
+>
+> **Linux/macOS:**
+> ```bash
+> export MIRROR_LOCAL_ROOT="/mirrors"
+> export GITHUB_TOKEN="ghp_xxxx"
+> ```
+>
+> 永久生效：添加到 `~/.bashrc`、`~/.zshrc` 或系统环境变量。
+
 # GitHub Release 下载脚本生成器
 
 这个 skill 帮你快速为任何 GitHub 项目生成完整的 Release 下载脚本，包括：
@@ -61,8 +83,8 @@ description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当
 
 3. **创建目录时使用用户工作目录作为基准**：
    ```bash
-   # 示例：用户工作目录是 Z:/soft，用户指定 runtime/docker_tools/image-syncer
-   # 最终路径应该是 Z:/soft/runtime/docker_tools/image-syncer
+   # 示例：用户工作目录是 ${MIRROR_LOCAL_ROOT}，用户指定 runtime/docker_tools/image-syncer
+   # 最终路径应该是 ${MIRROR_LOCAL_ROOT}/runtime/docker_tools/image-syncer
    # 而不是 .claude/projects/z--soft/runtime/docker_tools/image-syncer
    ```
 
@@ -76,7 +98,18 @@ description: 自动生成 GitHub Release 下载脚本和统一入口脚本。当
 
 **重要：完全按照 nerdctl-downloader.sh 模板生成！**
 
-首先读取参考模板：[Z:/soft/runtime/nerdctl/nerdctl-downloader.sh](Z:/soft/runtime/nerdctl/nerdctl-downloader.sh)
+首先读取参考模板。使用 mirror-file-manager skill 获取模板的本地路径：
+
+1. **获取模板 URL**：
+   - 模板 base URL：`http://mirrors.lpx.com/soft/runtime/`
+   - nerdctl 模板：`http://mirrors.lpx.com/soft/runtime/nerdctl/nerdctl-downloader.sh`
+   - containerd 模板：`http://mirrors.lpx.com/soft/runtime/containerd/containerd-downloader.sh`
+   - runc 模板：`http://mirrors.lpx.com/soft/runtime/runc/runc-downloader.sh`
+
+2. **转换为本地路径** - 使用 mirror-file-manager skill：
+   - 将 `http://mirrors.lpx.com` 替换为 `${MIRROR_LOCAL_ROOT}`（注意路径分隔符转换）
+   - 示例：`http://mirrors.lpx.com/soft/runtime/nerdctl/nerdctl-downloader.sh`
+     → `${MIRROR_LOCAL_ROOT}\soft\runtime\nerdctl\nerdctl-downloader.sh`
 
 **必须遵守的关键规则：**
 
@@ -154,7 +187,7 @@ WORK_DIR=$(pwd)
 if [[ "$WORK_DIR" =~ .*\.claude/projects.* ]]; then
     # 尝试获取用户指定的实际工作目录
     # 通常用户会在命令中指定相对路径，如 runtime/docker_tools/image-syncer
-    WORK_DIR="Z:/soft"  # 或者从其他上下文推断
+    WORK_DIR="${MIRROR_LOCAL_ROOT}"  # 或者从其他上下文推断
 fi
 ```
 
@@ -229,14 +262,14 @@ bash {name}-downloader.sh -p http://192.168.0.4:7890 -t ${GITHUB_TOKEN} -V -d ${
 /c/Users/lipanx/.claude/projects/z--soft/runtime/docker_tools/image-syncer/
 
 # 正确的路径（应该这样）
-Z:/soft/runtime/docker_tools/image-syncer/
+${MIRROR_LOCAL_ROOT}/runtime/docker_tools/image-syncer/
 ```
 
 如果发现脚本被写入错误的目录，需要将文件移动到正确位置：
 ```bash
 # 从错误位置复制到正确位置
 cp /c/Users/lipanx/.claude/projects/z--soft/runtime/docker_tools/image-syncer/*.sh \
-   Z:/soft/runtime/docker_tools/image-syncer/
+   ${MIRROR_LOCAL_ROOT}/runtime/docker_tools/image-syncer/
 ```
 
 ### 6. 验证和测试
@@ -343,7 +376,7 @@ bash scripts/check_release_files.sh containerd containerd v1.7.0
    /c/Users/lipanx/.claude/projects/z--soft/...
 
    # 正确位置 - 用户的工作目录
-   Z:/soft/runtime/docker_tools/image-syncer/
+   ${MIRROR_LOCAL_ROOT}/runtime/docker_tools/image-syncer/
    ```
 
 2. **将生成的两个脚本保存到用户指定目录**
