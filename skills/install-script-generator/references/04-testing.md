@@ -5,7 +5,6 @@
 **脚本的本地内网服务器路径**: `LOCAL_SH_PATH = ${MIRROR_LOCAL_ROOT}\{OUTPUT_DIR}\install_{tool}.sh`
 **脚本的本地内网服务器URL**: `IN_SH_URL = ${MIRROR_INTRANET_BASE_URL}\{OUTPUT_DIR}\install_{tool}.sh`
 
-**使用 ssh-mcp-server MCP 连接测试服务器：** `${TEST_NODE_IP}`
 
 - 后续服务都在测试服务器上执行。
 ---
