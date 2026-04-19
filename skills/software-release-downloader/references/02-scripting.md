@@ -37,9 +37,21 @@
 
 ## 必须遵守的关键规则
 
-0. **必需环境变量检查** - 脚本开头必须检查：
+0. **必需环境变量检查** - 在参数解析之后、日志函数定义之后检查：
    ```bash
-   # 检查必需的环境变量
+   # 解析命令行参数...
+   while [[ $# -gt 0 ]]; do
+       ...
+   done
+
+   # 支持环境变量设置 Token
+   if [ -z "$GITHUB_TOKEN" ] && [ -n "$GITHUB_TOKEN_ENV" ]; then
+       GITHUB_TOKEN="$GITHUB_TOKEN_ENV"
+   fi
+
+   # 颜色输出和日志函数定义...
+
+   # 检查必需的环境变量（必须在日志函数定义之后）
    if [[ -z "${GITHUB_TOKEN}" ]]; then
        log_error "GITHUB_TOKEN 环境变量未设置"
        exit 1
@@ -50,6 +62,8 @@
        exit 1
    fi
    ```
+
+   **注意：不要在日志函数定义之前检查环境变量！** 否则会报错 `log_error: 未找到命令`。
 
 1. **代理设置方式** - 使用环境变量，不是 curl 参数
    ```bash

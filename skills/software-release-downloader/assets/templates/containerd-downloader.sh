@@ -50,21 +50,6 @@ show_help() {
 EOF
 }
 
-# 检查必需的环境变量
-if [[ -z "${GITHUB_TOKEN}" ]]; then
-    log_error "GITHUB_TOKEN 环境变量未设置"
-    exit 1
-fi
-
-if [[ -z "${PROXY}" ]]; then
-    log_error "PROXY 环境变量未设置"
-    exit 1
-fi
-# 显示版本信息
-show_version() {
-    echo "$SCRIPT_NAME v$SCRIPT_VERSION"
-}
-
 # 解析命令行参数
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -137,6 +122,17 @@ log_warning() {
 log_error() {
     echo -e "${RED}[ERROR]${NC} $1" >&2
 }
+
+# 检查必需的环境变量（必须在日志函数定义之后）
+if [[ -z "${GITHUB_TOKEN}" ]]; then
+    log_error "GITHUB_TOKEN 环境变量未设置"
+    exit 1
+fi
+
+if [[ -z "${PROXY}" ]]; then
+    log_error "PROXY 环境变量未设置"
+    exit 1
+fi
 
 # 检查依赖
 check_dependencies() {
