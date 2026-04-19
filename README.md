@@ -18,6 +18,7 @@ myaitools/
 ### SSH MCP Server
 
 Connects to internal network hosts via SSH:
+- 每个使用SSH MCP服务器的，都需要设置环境变量： SSH_MCP_CONFIG
 
 ```json
 {
@@ -30,7 +31,7 @@ Connects to internal network hosts via SSH:
         "-y",
         "@lpx/ssh-mcp-server",
         "--config-file",
-        "D:\\AI\\github-code\\ssh-mcp-server\\ssh-config.json"
+        "${SSH_MCP_CONFIG}"
       ]
     }
   }
