@@ -8,7 +8,7 @@
           "-y",
           "@lpx/ssh-mcp-server",
           "--config-file",
-          "D:\\AI\\github-code\\ssh-mcp-server\\ssh-config.json"
+          "${SSH_MCP_CONFIG}"
         ]
       }
   }
