@@ -180,10 +180,30 @@ fi
 |------|---------|------|
 | 单文件安装 | `install_runc.sh` | 下载后直接 cp |
 | 压缩包解压 | `install_helm.sh` | tar -xzf |
-| 环境变量 export | `install_node.sh` | `export NODE_HOME` |
+| 环境变量 export | `install_node.sh` | `ENV_FILE="/etc/profile.d/xxx.sh"` + `export XXX_HOME` |
 | 多软链接 | `install_node.sh` | `ln -s` |
 | strip-components | `install_node.sh` | `tar --strip-components=1` |
 | GitHub Token | `install_runc.sh` | `Authorization: token` |
+
+### 2.5.1 环境变量配置代码示例
+
+需要设置环境变量的工具（如 Java、Gradle、Node.js 等），**必须**生成以下代码：
+
+```bash
+# 9. 设置 XXX_HOME 环境变量
+ENV_FILE="/etc/profile.d/xxx_home.sh"
+log_info "设置 XXX_HOME 环境变量到 ${ENV_FILE}"
+
+cat <<EOF | run_with_fallback tee "$ENV_FILE" >/dev/null
+export XXX_HOME=${XXX_HOME}
+export PATH=\$XXX_HOME/bin:\$PATH
+EOF
+
+run_with_fallback chmod 644 "$ENV_FILE"
+log_info "环境变量配置完成"
+```
+
+> ⚠️ **所有需要设置环境变量的工具都必须生成 `/etc/profile.d/` 配置**，包括但不限于：Java (JAVA_HOME)、Gradle (GRADLE_HOME)、Maven (MAVEN_HOME)、Node.js (NODE_HOME) 等。
 
 ---
 
