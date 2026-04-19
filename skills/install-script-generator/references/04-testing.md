@@ -40,9 +40,9 @@ curl -sSL ${IN_SH_URL} | sudo bash -s -- -v {version} -n out -t ${GITHUB_TOKEN} 
    ls -la /usr/local/{tool}-{version}/
    ```
 
-3. 验证可执行：
+3. 验证可执行：不要使用 `/usr/local/{tool}-{version}/{tool}`，而要使用 `{tool}`。
    ```bash
-   /usr/local/{tool}-{version}/{tool} version --client
+   {tool} version --client
    ```
 
 ---
