@@ -40,7 +40,8 @@ description: 自动生成 Linux 二进制工具安装脚本的完整工作流。
 | 4 | 远程测试 | 验证安装成功 |
 | 5 | 上传验证 | 确认文件服务器可访问 |
 
-- 远程测试： **使用 ssh-mcp-server MCP 连接测试服务器：** `${TEST_NODE_IP}` : 如果测试${TEST_NODE_IP}不存在，提示用户设置，如果测试${TEST_NODE_IP}存在，则必须执行远程测试步骤
+- 远程测试： **使用 ssh-mcp-server MCP 连接测试服务器：`${TEST_NODE_IP}`**  : 
+如果测试${TEST_NODE_IP}不存在，提示用户设置，如果测试${TEST_NODE_IP}存在，则必须执行远程测试步骤
 
 ---
 

@@ -84,7 +84,9 @@ cat "${MIRROR_LOCAL_ROOT}\scripts\runtime\{template_path}\install_{tool}.sh"
 | `-i` | `--intranet-base` | 内网镜像基础 URL | 模板定义 |
 | `-e` | `--internet-base` | 外网镜像基础 URL | 模板定义 |
 | `-u` | `--url` | 直接指定下载 URL | - |
-| `-d` | `--dir` | 安装目录 | `/usr/local/bin` |
+| `-d` | `--dir` | 安装目录 | `/usr/local` |
+
+> ⚠️ **INSTALL_DIR 默认值必须为 `/usr/local`**，不得擅自改为 `/opt` 或其他路径。
 | `-p` | `--proxy` | HTTP 代理地址 | - |
 | - | `--keep-package` | 保留安装包 | false |
 | - | `--debug` | 调试模式 | false |
