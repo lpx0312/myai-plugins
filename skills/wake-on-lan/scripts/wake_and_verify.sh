@@ -39,7 +39,7 @@ if [ "$HOSTNAME" == "all" ]; then
         MAC="${INFO[0]}"
         IP="${INFO[1]}"
         echo "唤醒 $host ($MAC)"
-        wake-on-lan "$MAC" > /dev/null 2>&1
+        wakeonlan "$MAC" > /dev/null 2>&1
     done
     echo -e "${GREEN}✓ 所有主机的唤醒包已发送${NC}"
     echo "请等待 1-3 分钟让主机启动，然后使用以下命令验证:"
@@ -82,9 +82,9 @@ fi
 
 # 发送唤醒包
 echo "发送 Wake-on-LAN 魔术包..."
-if ! wake-on-lan "$MAC" > /dev/null 2>&1; then
+if ! wakeonlan "$MAC" > /dev/null 2>&1; then
     echo -e "${RED}✗ 发送唤醒包失败${NC}"
-    echo "请下载 wake-on-lan: https://github.com/lpx0312/wake-on-lan/releases"
+    echo "请检查 wakeonlan 是否已安装"
     exit 1
 fi
 

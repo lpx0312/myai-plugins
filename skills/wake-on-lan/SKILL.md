@@ -7,29 +7,21 @@ description: 通过 Wake-on-LAN (WOL) 远程唤醒局域网主机。支持单台
 
 远程唤醒局域网内主机并验证启动状态。
 
-## 安装 wake-on-lan 工具
+## 安装 wakeonlan 工具
 
-**Windows (内网):**
+**Windows:**
 ```powershell
-# 下载
-curl -o D:\SystemTools\wake-on-lan.exe ${MIRROR_INTRANET_BASE_URL}/soft/tools/wake-on-lan/wake-on-lan_1.0.2_windows_amd64.exe
-
-# 或外网下载
-curl -o D:\SystemTools\wake-on-lan.exe https://github.com/lpx0312/wake-on-lan/releases/download/v1.0.2/wake-on-lan_1.0.2_windows_amd64.exe
-
+winget install NewCloud.WakeOnLan
 ```
 
-**Linux (内网):**
-```bash
-# 下载并重命名
-curl -o /usr/local/bin/wake-on-lan ${MIRROR_INTRANET_BASE_URL}/soft/tools/wake-on-lan/wake-on-lan_1.0.2_linux_amd64
+**Linux:**
 
-# 或外网下载
-curl -o /usr/local/bin/wake-on-lan https://github.com/lpx0312/wake-on-lan/releases/download/v1.0.2/wake-on-lan_1.0.2_linux_amd64
-
-# 添加执行权限并移动到 PATH 目录
-chmod +x /usr/local/bin/wake-on-lan
-```
+| 系统类型 | 发行版示例 | 安装命令 |
+| :--- | :--- | :--- |
+| Debian/Ubuntu | Ubuntu, Debian, Linux Mint, Kali | `sudo apt update && sudo apt install wakeonlan -y` |
+| RHEL/CentOS | CentOS, RHEL, Fedora, Rocky Linux | `sudo dnf install wakeonlan -y` *(老版本 CentOS 用 `yum`)* |
+| Arch Linux | Arch, Manjaro, EndeavourOS | `sudo pacman -S wakeonlan` |
+| Alpine Linux | Alpine | `sudo apk add wakeonlan` |
 
 ## 工作流程
 
@@ -79,7 +71,7 @@ all      -> 唤醒所有主机
 
 ```bash
 # 发送唤醒包
-wake-on-lan <MAC地址>
+wakeonlan <MAC地址>
 
 # 等待 30 秒后验证
 sleep 30 && ping -c 1 <IP地址>
@@ -98,17 +90,17 @@ sleep 30 && ping -c 1 <IP地址>
 ### 唤醒单台主机
 
 ```bash
-wake-on-lan 22:02:4d:07:5c:7a    # esxi200
-wake-on-lan 1C:83:41:8A:4E:7B    # xp
-wake-on-lan 2C:F0:5D:3D:27:87    # r3600
+wakeonlan 22:02:4d:07:5c:7a    # esxi200
+wakeonlan 1C:83:41:8A:4E:7B    # xp
+wakeonlan 2C:F0:5D:3D:27:87    # r3600
 ```
 
 ### 唤醒所有主机
 
 ```bash
-wake-on-lan 22:02:4d:07:5c:7a && \
-wake-on-lan 1C:83:41:8A:4E:7B && \
-wake-on-lan 2:2C:F0:5D:3D:27:87
+wakeonlan 22:02:4d:07:5c:7a && \
+wakeonlan 1C:83:41:8A:4E:7B && \
+wakeonlan 2:2C:F0:5D:3D:27:87
 ```
 
 ### 验证主机状态
@@ -131,8 +123,8 @@ ping -c 1 192.168.0.198 && echo "r3600 在线"
 添加到 `~/.bashrc`:
 
 ```bash
-alias wake-esxi='wake-on-lan 22:02:4d:07:5c:7a'
-alias wake-xp='wake-on-lan 1C:83:41:8A:4E:7B'
-alias wake-r3600='wake-on-lan 2C:F0:5D:3D:27:87'
-alias wake-all='wake-on-lan 22:02:4d:07:5c:7a && wake-on-lan 1C:83:41:8A:4E:7B && wake-on-lan 2C:F0:5D:3D:27:87'
+alias wake-esxi='wakeonlan 22:02:4d:07:5c:7a'
+alias wake-xp='wakeonlan 1C:83:41:8A:4E:7B'
+alias wake-r3600='wakeonlan 2C:F0:5D:3D:27:87'
+alias wake-all='wakeonlan 22:02:4d:07:5c:7a && wakeonlan 1C:83:41:8A:4E:7B && wakeonlan 2C:F0:5D:3D:27:87'
 ```
