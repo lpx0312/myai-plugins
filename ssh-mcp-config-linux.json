@@ -1,0 +1,35 @@
+[
+    {
+      "name": "192.168.0.18",
+      "host": "192.168.0.18",
+      "port": 22,
+      "username": "lipanxiang",
+      "privateKey": "~/.ssh/id_rsa",
+      "commandBlacklist": ["^rm .*", "^shutdown.*", "^reboot.*"]
+    },
+    {
+      "name": "192.168.1.182",
+      "host": "192.168.1.182",
+      "port": 22,
+      "username": "root",
+      "privateKey": "~/.ssh/id_rsa",
+      "commandBlacklist": ["^rm .*", "^shutdown.*", "^reboot.*"]
+    },
+    {
+      "name": "192.168.0.3",
+      "host": "192.168.0.3",
+      "port": 22,
+      "username": "root",
+      "privateKey": "~/.ssh/id_rsa",
+      "commandBlacklist": ["^rm .*", "^shutdown.*", "^reboot.*"]
+    },
+    {
+      "name": "192.168.0.200",
+      "host": "192.168.0.200",
+      "port": 22,
+      "username": "root",
+      "privateKey": "~/.ssh/id_rsa",
+      "commandBlacklist": ["^rm .*", "^shutdown.*", "^reboot.*"]
+    }
+  ]
+  
