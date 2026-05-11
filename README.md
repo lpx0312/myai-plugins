@@ -18,6 +18,7 @@ myaitools/
 ### SSH MCP Server
 
 Connects to internal network hosts via SSH:
+
 - 每个使用SSH MCP服务器的，都需要设置环境变量： SSH_MCP_CONFIG
 
 ```json
@@ -27,9 +28,9 @@ Connects to internal network hosts via SSH:
       "type": "stdio",
       "command": "npx",
       "args": [
-        "--registry", "http://192.168.0.12/repository/npm-group/",
-        "-y",
-        "@lpx/ssh-mcp-server",
+          "--registry", "https://registry.npmmirror.com",
+          "-y",
+          "@fangjunjie/ssh-mcp-server",
         "--config-file",
         "${SSH_MCP_CONFIG}"
       ]
@@ -55,8 +56,6 @@ skills/
 
 ```
 
-
-
 ## 还有些官方插件，需要单独安装
 
 ```
@@ -74,8 +73,8 @@ skills/
 /plugin install skill-creator@claude-plugins-official
 ```
 
-
 - 终端执行
+
 ```bash
 claude -p "/plugin marketplace add anthropics/claude-plugins-official"
 claude -p "/plugin install claude-md-management@claude-plugins-official"
@@ -89,7 +88,6 @@ claude -p "/plugin install mcp-server-dev@claude-plugins-official"
 claude -p "/plugin install ralph-loop@claude-plugins-official"
 claude -p "/plugin install skill-creator@claude-plugins-official"
 ```
-
 
 ## 插件更新：
 

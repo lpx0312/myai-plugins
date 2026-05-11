@@ -9,9 +9,9 @@
         "type": "stdio",
         "command": "npx",
         "args": [
-          "--registry", "http://192.168.0.12/repository/npm-group/",
+          "--registry", "https://registry.npmmirror.com",
           "-y",
-          "@lpx/ssh-mcp-server",
+          "@fangjunjie/ssh-mcp-server",
           "--config-file",
           "${SSH_MCP_CONFIG}"
         ]
