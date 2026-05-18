@@ -27,6 +27,22 @@
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
     {
+      "name": "andrej-karpathy-skills",
+      "source": "./",
+      "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
+      "version": "1.0.0",
+      "author": {
+        "name": "forrestchang"
+      },
+      "keywords": [
+        "guidelines",
+        "best-practices",
+        "coding",
+        "karpathy"
+      ],
+      "category": "workflow"
+    },
+    {
       "name": "ui-ux-pro-max",
       "source": "./",
       "description": "Professional UI/UX design intelligence for AI coding assistants. Includes searchable databases of styles, colors, typography, charts, and UX guidelines for React, Next.js, Astro, Vue, Nuxt.js, Nuxt UI, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, and Jetpack Compose.",
