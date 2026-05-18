@@ -27,42 +27,37 @@
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
     {
-      "name": "andrej-karpathy-skills",
-      "source": "./",
-      "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
-      "version": "1.0.0",
-      "author": {
-        "name": "forrestchang"
+      "name": "obsidian",
+      "description": "Create and edit Obsidian vault files including Markdown, Bases, and Canvas. Use when working with .md, .base, or .canvas files in an Obsidian vault.",
+      "category": "document",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/kepano/obsidian-skills.git",
+        "sha": "ac9398734fe719565809f7a6048b05c36b1ca38f"
       },
-      "keywords": [
-        "guidelines",
-        "best-practices",
-        "coding",
-        "karpathy"
-      ],
-      "category": "workflow"
+      "homepage": "https://github.com/kepano/obsidian-skills.git"
+    },    
+    {
+      "name": "andrej-karpathy-skills",
+      "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/multica-ai/andrej-karpathy-skills.git",
+        "sha": "07f4ef3ac2568c25a3b0c8ef5165a86abc3e56e4"
+      },
+      "homepage": "https://github.com/multica-ai/andrej-karpathy-skills.git"
     },
     {
       "name": "ui-ux-pro-max",
-      "source": "./",
       "description": "Professional UI/UX design intelligence for AI coding assistants. Includes searchable databases of styles, colors, typography, charts, and UX guidelines for React, Next.js, Astro, Vue, Nuxt.js, Nuxt UI, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, and Jetpack Compose.",
-      "version": "2.2.1",
-      "author": {
-        "name": "nextlevelbuilder"
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
+        "sha": "07f4ef3ac2568c25a3b0c8ef5165a86abc3e56e4"
       },
-      "keywords": [
-        "ui",
-        "ux",
-        "design",
-        "styles",
-        "typography",
-        "color-palette",
-        "accessibility",
-        "charts",
-        "components"
-      ],
-      "category": "design",
-      "strict": false
+      "homepage": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
     },
     {
       "name": "chrome-devtools-mcp",
