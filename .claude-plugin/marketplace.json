@@ -23,6 +23,15 @@
       ]
     },
     {
+      "name": "claude-plugin-creator",
+      "description": "创建和发布 Claude Code 插件到插件市场",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/claude-plugin-creator"
+      ]
+    },
+    {
       "name": "cert-manager",
       "description": "证书管理工具",
       "source": "./",
