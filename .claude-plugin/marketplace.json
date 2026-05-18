@@ -26,6 +26,16 @@
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
     {
+      "name": "playwright-cli",
+      "description": "Automate browser interactions, test web pages and work with Playwright tests.",
+      "category": "development",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/microsoft/playwright-cli.git",
+      },
+      "homepage": "https://github.com/microsoft/playwright-cli.git"
+    },  
+    {
       "name": "obsidian",
       "description": "Create and edit Obsidian vault files including Markdown, Bases, and Canvas. Use when working with .md, .base, or .canvas files in an Obsidian vault.",
       "category": "document",
@@ -34,7 +44,7 @@
         "url": "https://github.com/kepano/obsidian-skills.git",
       },
       "homepage": "https://github.com/kepano/obsidian-skills.git"
-    },    
+    },      
     {
       "name": "andrej-karpathy-skills",
       "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
