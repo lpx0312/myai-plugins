@@ -7,13 +7,92 @@
   },
   "plugins": [
     {
-      "name": "myai-tools",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/lpx0312/myai-plugins.git"
-      },
-      "category": "development",
-      "description": "Reliable automation, in-depth debugging, and performance analysis in Chrome using Chrome DevTools and Puppeteer"
+      "name": "ssh-mcp-server",
+      "description": "远程连接主机的MCP服务器插件",
+      "source": "./plugins/ssh-mcp-server",
+      "category": "mcp"
+    },
+    {
+      "name": "esxi-vm-skills",
+      "description": "ESXi虚拟机管理工具集，包含虚拟机创建和管理功能",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/esxi-vm-creator",
+        "./skills/esxi-vm-manager"
+      ]
+    },
+    {
+      "name": "cert-manager",
+      "description": "证书管理工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/cert-manager"
+      ]
+    },
+    {
+      "name": "docker-image-sync-acr",
+      "description": "Docker镜像同步到ACR工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/docker-image-sync-acr"
+      ]
+    },
+    {
+      "name": "github-kb",
+      "description": "GitHub知识库管理工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/github-kb"
+      ]
+    },
+    {
+      "name": "install-script-generator",
+      "description": "安装脚本生成器",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/install-script-generator"
+      ]
+    },
+    {
+      "name": "mirror-file-manager",
+      "description": "镜像文件服务器管理工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/mirror-file-manager"
+      ]
+    },
+    {
+      "name": "obsidian-organizer",
+      "description": "Obsidian笔记整理工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/obsidian-organizer"
+      ]
+    },
+    {
+      "name": "software-release-downloader",
+      "description": "软件发布版本下载器",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/software-release-downloader"
+      ]
+    },
+    {
+      "name": "wake-on-lan",
+      "description": "网络唤醒工具",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/wake-on-lan"
+      ]
     },
     {
       "name": "supabase",
