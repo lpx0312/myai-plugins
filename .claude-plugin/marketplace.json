@@ -35,7 +35,7 @@
       "source": {
         "source": "url",
         "url": "https://github.com/anthropics/claude-plugins-public/tree/main/plugins/ralph-loop"
-      }      
+      },
       "category": "development",
       "homepage": "https://github.com/anthropics/claude-plugins-public/tree/main/plugins/ralph-loop"
     },
