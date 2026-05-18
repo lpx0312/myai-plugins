@@ -105,20 +105,6 @@
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
     {
-      "name": "ralph-loop",
-      "description": "Interactive self-referential AI loops for iterative development, implementing the Ralph Wiggum technique. Claude works on the same task repeatedly, seeing its previous work, until completion.",
-      "author": {
-        "name": "Anthropic",
-        "email": "support@anthropic.com"
-      },
-      "source": {
-        "source": "url",
-        "url": "https://github.com/anthropics/claude-plugins-public/tree/main/plugins/ralph-loop"
-      },
-      "category": "development",
-      "homepage": "https://github.com/anthropics/claude-plugins-public/tree/main/plugins/ralph-loop"
-    },
-    {
       "name": "playwright-cli",
       "description": "Automate browser interactions, test web pages and work with Playwright tests.",
       "category": "development",
