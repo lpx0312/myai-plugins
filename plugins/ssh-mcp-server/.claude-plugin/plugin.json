@@ -3,5 +3,18 @@
   "description": "远程连接主机的MCP服务器插件",
   "author": {
     "name": "User"
+  },
+  "mcpServers": {
+    "ssh-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "--registry", "https://registry.npmmirror.com",
+        "-y",
+        "@fangjunjie/ssh-mcp-server",
+        "--config-file",
+        "${SSH_MCP_CONFIG}"
+      ]
+    }
   }
 }
