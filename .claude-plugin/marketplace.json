@@ -22,7 +22,6 @@
       "source": {
         "source": "url",
         "url": "https://github.com/supabase-community/supabase-plugin.git",
-        "sha": "693a17a9970ba96e01afb9bef060d1dca48463ba"
       },
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
@@ -33,7 +32,6 @@
       "source": {
         "source": "url",
         "url": "https://github.com/kepano/obsidian-skills.git",
-        "sha": "ac9398734fe719565809f7a6048b05c36b1ca38f"
       },
       "homepage": "https://github.com/kepano/obsidian-skills.git"
     },    
@@ -44,7 +42,6 @@
       "source": {
         "source": "url",
         "url": "https://github.com/multica-ai/andrej-karpathy-skills.git",
-        "sha": "2c606141936f1eeef17fa3043a72095b4765b9c2"
       },
       "homepage": "https://github.com/multica-ai/andrej-karpathy-skills.git"
     },
@@ -55,7 +52,6 @@
       "source": {
         "source": "url",
         "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
-        "sha": "07f4ef3ac2568c25a3b0c8ef5165a86abc3e56e4"
       },
       "homepage": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
     },
@@ -77,7 +73,6 @@
       "source": {
         "source": "url",
         "url": "https://github.com/Postman-Devrel/postman-claude-code-plugin.git",
-        "sha": "40b11ac3466c500cf4625ac016d5c01cd00046f4"
       },
       "homepage": "https://learning.postman.com/docs/developer/postman-mcp-server/"
     },
@@ -120,16 +115,6 @@
         "url": "https://github.com/thedotmack/claude-mem.git"
       },
       "homepage": "https://github.com/thedotmack/claude-mem"
-    },
-    {
-      "name": "obsidian-skills",
-      "description": "Agent skills for Obsidian. Teach your agent to use Markdown, Bases, JSON Canvas, and use the CLI.",
-      "category": "productivity",
-      "source": {
-        "source": "url",
-        "url": "https://github.com/kepano/obsidian-skills.git"
-      },
-      "homepage": "https://github.com/kepano/obsidian-skills"
     }
   ]
 }
