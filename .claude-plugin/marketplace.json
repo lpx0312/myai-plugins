@@ -5,7 +5,7 @@
     "name": "lpx03",
     "email": "lpx03_12@outlook.com"
   },
-  "plugins": [    
+  "plugins": [
     {
       "name": "myai-tools",
       "source": {
@@ -21,7 +21,7 @@
       "category": "database",
       "source": {
         "source": "url",
-        "url": "https://github.com/supabase-community/supabase-plugin.git",
+        "url": "https://github.com/supabase-community/supabase-plugin.git"
       },
       "homepage": "https://github.com/supabase-community/supabase-plugin"
     },
@@ -31,27 +31,27 @@
       "category": "development",
       "source": {
         "source": "url",
-        "url": "https://github.com/microsoft/playwright-cli.git",
+        "url": "https://github.com/microsoft/playwright-cli.git"
       },
       "homepage": "https://github.com/microsoft/playwright-cli.git"
-    },  
+    },
     {
       "name": "obsidian",
       "description": "Create and edit Obsidian vault files including Markdown, Bases, and Canvas. Use when working with .md, .base, or .canvas files in an Obsidian vault.",
       "category": "document",
       "source": {
         "source": "url",
-        "url": "https://github.com/kepano/obsidian-skills.git",
+        "url": "https://github.com/kepano/obsidian-skills.git"
       },
       "homepage": "https://github.com/kepano/obsidian-skills.git"
-    },      
+    },
     {
       "name": "andrej-karpathy-skills",
       "description": "Behavioral guidelines to reduce common LLM coding mistakes: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven Execution",
       "category": "development",
       "source": {
         "source": "url",
-        "url": "https://github.com/multica-ai/andrej-karpathy-skills.git",
+        "url": "https://github.com/multica-ai/andrej-karpathy-skills.git"
       },
       "homepage": "https://github.com/multica-ai/andrej-karpathy-skills.git"
     },
@@ -61,7 +61,7 @@
       "category": "development",
       "source": {
         "source": "url",
-        "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git",
+        "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
       },
       "homepage": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git"
     },
@@ -82,7 +82,7 @@
       "category": "development",
       "source": {
         "source": "url",
-        "url": "https://github.com/Postman-Devrel/postman-claude-code-plugin.git",
+        "url": "https://github.com/Postman-Devrel/postman-claude-code-plugin.git"
       },
       "homepage": "https://learning.postman.com/docs/developer/postman-mcp-server/"
     },
