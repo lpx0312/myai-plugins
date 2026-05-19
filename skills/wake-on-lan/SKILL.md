@@ -7,21 +7,60 @@ description: 通过 Wake-on-LAN (WOL) 远程唤醒局域网主机。支持单台
 
 远程唤醒局域网内主机并验证启动状态。
 
-## 安装 wakeonlan 工具
+## 环境判断
 
-**Windows:**
-```powershell
-winget install NewCloud.WakeOnLan
+首先判断当前操作系统，选择对应的唤醒方式：
+
+| 系统 | 唤醒方式 | 依赖 |
+|------|----------|------|
+| Windows | Python + Scapy 脚本 | `pip install scapy` |
+| Linux | wakeonlan 命令行工具 | 见下方安装命令 |
+
+## Windows 唤醒方式
+
+使用 `scripts/wol_windows.py` 脚本（基于 Scapy Layer 2 广播，支持唤醒+验证）：
+
+```bash
+# 使用主机名（自动唤醒并验证启动状态）
+python scripts/wol_windows.py <主机名>
+
+# 示例
+python scripts/wol_windows.py esxi200
+python scripts/wol_windows.py xp
+python scripts/wol_windows.py r3600
+python scripts/wol_windows.py all      # 唤醒所有主机
+
+# 也可以直接传 MAC 地址（仅发送唤醒包，不验证）
+python scripts/wol_windows.py 22:02:4d:07:5c:7a
 ```
 
-**Linux:**
+## Linux 唤醒方式
 
-| 系统类型 | 发行版示例 | 安装命令 |
-| :--- | :--- | :--- |
-| Debian/Ubuntu | Ubuntu, Debian, Linux Mint, Kali | `sudo apt update && sudo apt install wakeonlan -y` |
-| RHEL/CentOS | CentOS, RHEL, Fedora, Rocky Linux | `sudo dnf install wakeonlan -y` *(老版本 CentOS 用 `yum`)* |
-| Arch Linux | Arch, Manjaro, EndeavourOS | `sudo pacman -S wakeonlan` |
-| Alpine Linux | Alpine | `sudo apk add wakeonlan` |
+### 安装 wakeonlan
+
+先检查 `wakeonlan` 是否已安装，未安装则按发行版安装：
+
+```bash
+# 检查是否已安装
+which wakeonlan || echo "未安装"
+```
+
+| 系统类型 | 安装命令 |
+| :--- | :--- |
+| Debian/Ubuntu | `sudo apt update && sudo apt install wakeonlan -y` |
+| RHEL/CentOS | `sudo dnf install wakeonlan -y` |
+| Arch Linux | `sudo pacman -S wakeonlan` |
+| Alpine Linux | `sudo apk add wakeonlan` |
+
+### 唤醒命令
+
+```bash
+# 唤醒并验证
+~/wake_and_verify.sh <主机名>
+
+# 或直接发送唤醒包
+wakeonlan <MAC地址>
+```
 
 ## 工作流程
 
@@ -29,8 +68,7 @@ winget install NewCloud.WakeOnLan
 
 当收到唤醒请求时，首先验证主机名是否匹配：
 
-```bash
-# 支持的主机名
+```
 esxi200  -> 192.168.0.200 (MAC: 22:02:4d:07:5c:7a)
 xp       -> 192.168.0.225 (MAC: 1C:83:41:8A:4E:7B)
 r3600    -> 192.168.0.198 (MAC: 2C:F0:5D:3D:27:87)
@@ -39,7 +77,7 @@ all      -> 唤醒所有主机
 
 **如果主机名不匹配**，提示用户：
 ```
-❌ 未找到主机: {输入的主机名}
+未找到主机: {输入的主机名}
 可用的主机:
   - esxi200 (192.168.0.200)
   - xp (192.168.0.225)
@@ -49,32 +87,24 @@ all      -> 唤醒所有主机
 
 ### 2. 发送唤醒命令
 
-使用 `scripts/wake_and_verify.sh` 脚本唤醒并验证：
+根据操作系统选择命令：
 
+**Windows：**
 ```bash
-# 唤醒单台主机并验证
-~/wake_and_verify.sh <主机名>
-
-# 示例
-~/wake_and_verify.sh r3600
+python scripts/wol_windows.py <主机名>
 ```
 
-该脚本会：
-1. 发送 WOL 魔术包
-2. 等待主机启动（最长 3 分钟）
-3. 每 10 秒 ping 一次验证主机是否在线
-4. 报告启动状态
+**Linux：**
+```bash
+~/wake_and_verify.sh <主机名>
+```
 
-### 3. 手动验证（可选）
-
-如需手动验证，使用以下命令：
+### 3. 验证主机状态
 
 ```bash
-# 发送唤醒包
-wakeonlan <MAC地址>
-
-# 等待 30 秒后验证
-sleep 30 && ping -c 1 <IP地址>
+ping -c 1 192.168.0.200 && echo "esxi200 在线"
+ping -c 1 192.168.0.225 && echo "xp 在线"
+ping -c 1 192.168.0.198 && echo "r3600 在线"
 ```
 
 ## 主机列表
@@ -85,46 +115,9 @@ sleep 30 && ping -c 1 <IP地址>
 | xp | 192.168.0.225 | 1C:83:41:8A:4E:7B | Windows XP 测试机 |
 | r3600 | 192.168.0.198 | 2C:F0:5D:3D:27:87 | Ryzen 3600 工作站 |
 
-## 快速命令
-
-### 唤醒单台主机
-
-```bash
-wakeonlan 22:02:4d:07:5c:7a    # esxi200
-wakeonlan 1C:83:41:8A:4E:7B    # xp
-wakeonlan 2C:F0:5D:3D:27:87    # r3600
-```
-
-### 唤醒所有主机
-
-```bash
-wakeonlan 22:02:4d:07:5c:7a && \
-wakeonlan 1C:83:41:8A:4E:7B && \
-wakeonlan 2:2C:F0:5D:3D:27:87
-```
-
-### 验证主机状态
-
-```bash
-ping -c 1 192.168.0.200 && echo "esxi200 在线"
-ping -c 1 192.168.0.225 && echo "xp 在线"
-ping -c 1 192.168.0.198 && echo "r3600 在线"
-```
-
 ## 前提条件
 
 1. 目标主机 BIOS/UEFI 已开启 WOL (Wake on LAN)
 2. 目标主机网卡已开启 WOL 功能
 3. 主机处于睡眠或软关机状态（非断电）
 4. 网络支持广播包传输
-
-## 快速别名 (可选)
-
-添加到 `~/.bashrc`:
-
-```bash
-alias wake-esxi='wakeonlan 22:02:4d:07:5c:7a'
-alias wake-xp='wakeonlan 1C:83:41:8A:4E:7B'
-alias wake-r3600='wakeonlan 2C:F0:5D:3D:27:87'
-alias wake-all='wakeonlan 22:02:4d:07:5c:7a && wakeonlan 1C:83:41:8A:4E:7B && wakeonlan 2C:F0:5D:3D:27:87'
-```
