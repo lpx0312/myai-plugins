@@ -12,7 +12,7 @@ description: Use when managing ESXi hosts - enabling/disabling maintenance mode,
 当用户想要：
 - 开启或关闭 ESXi 维护模式
 - 开启或关闭虚拟机
-- 创建或删除虚拟机快照
+- 创建、删除或还原虚拟机快照
 - 关闭或开启 ESXi 主机
 - 列出所有虚拟机及状态信息
 - 设置虚拟机的 CPU 和内存配置
@@ -40,5 +40,5 @@ description: Use when managing ESXi hosts - enabling/disabling maintenance mode,
 |----------|----------|
 | 维护模式、ESXi 开关机 | `references/host-management.md` |
 | 虚拟机开关机 | `references/vm-management.md` |
-| 快照创建、删除 | `references/snapshot-management.md` |
+| 快照创建、删除、还原 | `references/snapshot-management.md` |
 | 精简置备磁盘空间清理 | `references/thin-cleanup.md` |
