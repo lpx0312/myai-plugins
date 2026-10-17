@@ -141,7 +141,35 @@ PR:     #123 URL（草稿/就绪，检查: 3✔ 0✘ 1⏳）
 风险:   未跑/未验证/待人工的项
 ```
 
-## 6. 参考文件
+## 6. 取 ID / 打表用 jq，不要用 --template
+
+`--template` 是 Go 模板，会把数值型 ID 渲染成科学计数法（`3.8992700359e+10`），取 run/job 的
+databaseId 时必错：
+
+```bash
+gh run list --limit 3 --json databaseId,status,conclusion --jq '.[] | "\(.databaseId) \(.status)"'
+```
+
+jq 插值 `\(…)` 必须落在 jq 的双引号字符串内，外壳用单引号：
+`--jq '"state=\(.state)"'`。
+
+## 7. 实测记录
+
+2026-10-17 在 `lpx0312/gh-ops-selftest`（临时私有仓库，已删）端到端跑通并按结果修订本手册：
+
+| 动作 | 结果 |
+|---|---|
+| `git init` + `gh repo create --source=. --private --push` | ✅ 仓库建立并推送，default=main |
+| 建分支 → commit → `git push -u origin HEAD` | ✅ |
+| `scripts/pr-body-gen.sh` → `gh pr create -B main -F` | ✅ PR #1 |
+| `gh pr checks --watch --fail-fast`（带 ci.yml） | ✅ test pass 5s |
+| `gh pr review --approve`（自己的 PR） | ❌ `Can not approve your own pull request` → 已写入 pr.md |
+| `gh pr merge --squash --delete-branch` | ✅ squash 合并 + 远端分支删除 |
+| `git tag -a` + `git push origin v0.1.0` + `gh release create`（2 个附件） | ✅ release 带 tar.gz + SHA256SUMS |
+| `gh run list --template '{{.databaseId}}'` | ❌ 渲染成 `3.8992700359e+10` → 已改写为 --json/--jq |
+| `gh repo delete --yes` | ✅ 随后 `gh repo view` 报 Could not resolve |
+
+## 8. 参考文件
 
 - `references/repo.md` — 建/改/迁移/删除仓库、fork、模板、可见性、迁移
 - `references/pr.md` — PR 全生命周期、fork PR、评审、合并策略、auto-merge、冲突处理

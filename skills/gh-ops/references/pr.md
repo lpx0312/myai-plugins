@@ -68,6 +68,10 @@ gh pr review 123 --approve --body "…"    # 行内评论需走 API：
 gh api -X POST repos/O/R/pulls/123/reviews -F event=COMMENT -F body=@/tmp/review.md
 ```
 
+> **自己的 PR 不能 approve**：`gh pr review N --approve` 会报
+> `GraphQL: Review Can not approve your own pull request`。自测/自查只能用 `--comment`；
+> approve 必须由另一个账号或用户完成。别为了让 check 变绿去找 `--admin`。
+
 ### 评论 / 编辑 / 指派
 ```bash
 gh pr comment 123 -F /tmp/comment.md

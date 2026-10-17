@@ -32,6 +32,7 @@
 | `A pull request already exists for …` | 重复创建 | `gh pr view --json url` 取已有 PR |
 | `GraphQL: Could not resolve to a Repository` | `--head` 的用户/仓库不存在 | fork 名与实际不符，检查 `gh repo view mylogin/repo` |
 | `pull request is not mergeable` | 冲突 / 检查未过 / 需 review | `gh pr view N --json mergeable,mergeStateStatus` |
+| `Review Can not approve your own pull request` | **自己的 PR 不能自审通过**（GitHub 硬限制） | 自测时改用 `gh pr review N --comment`；approve 只能由别的账号点 |
 | `Pull request is not in the correct state` | 已合并/已关闭还想操作 | `gh pr view N --json state` |
 | `--body` 里出现字面 `\\n` | 用了转义而不是文件 | 改用 `--body-file` |
 | 正文中文乱码 | 源文件不是 UTF-8 | `file -i /tmp/pr.md`，用 Git Bash / UTF-8 写 |
@@ -62,6 +63,8 @@
 | 参数里的 `/path` 被改写 | MSYS 路径转换 | 前缀 `MSYS_NO_PATHCONV=1` |
 | diff 全是换行变动 | `core.autocrlf` | `git config core.autocrlf input` + `.gitattributes` |
 | `gh` 命令不存在 | PATH | 本机在 `/c/Tools/gh/bin/gh`；确认 `command -v gh` |
+| `--template` 打出 `3.8992700359e+10` 这种科学计数法 | Go 模板把数值型 ID 当 float 渲染 | 取 ID 一律 `--json databaseId --jq '.[].databaseId'`，不要用 `--template` |
+| `failed to parse jq expression … unexpected token` | jq 插值 `\(…)` 必须落在 **jq 的双引号字符串**里；Git Bash 里再套一层双引号极易错 | jq 程序用单引号包：`--jq '"state=\(.state)"'` |
 | CMD/PowerShell 里 `&&` 报错或 heredoc 失效 | shell 不同 | 统一用 Git Bash 执行 |
 | 中文文件名乱码 | 代码页 | `git config core.quotepath false` |
 | 输出被分页器卡住 | pager | `GH_PAGER=cat` 或 `--no-pager` |
