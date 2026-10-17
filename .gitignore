@@ -2,3 +2,6 @@
 .claude/
 __pycache__/
 *.pyc
+
+# 含个人/客户敏感信息，不纳入仓库
+/skills/afc-mon-report/
