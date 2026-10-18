@@ -1,6 +1,6 @@
 ---
 name: github-kb
-description: 本地 GitHub 知识库 + GitHub 全网检索（只读）。维护 D:\AI\github-code 下已克隆仓库的 GITHUB_KB.md 目录；用 gh search 搜仓库/issue/PR/代码来回答"GitHub 上有没有 X、谁遇到过我这个问题"。当用户说"clone 到知识库""找 GitHub 上的项目""帮我查下这个报错在 GitHub 上有没有人提过""搜 issue / PR"时使用。不做任何写操作——建仓库、提 PR、评审、合并、打 tag、发 release、跑 Actions 一律交给 skill gh-ops。
+description: 本地 GitHub 知识库 + GitHub 全网检索（只读）。维护 D:\AI\github-code 下已克隆仓库的 GITHUB_KB.md 目录；用 gh search 搜仓库/issue/PR/代码，并读取 issue / PR 正文与评论来回答"GitHub 上有没有 X、谁遇到过我这个问题、最后怎么解决的"。当用户说"clone 到知识库""找 GitHub 上的项目""帮我查下这个报错在 GitHub 上有没有人提过""搜 issue / PR""看看这些 issue 在说什么"时使用。不做任何写操作——建 issue、评论、提 PR、评审、合并、打 tag、发 release、跑 Actions 一律交给 skill gh-ops。
 license: MIT
 ---
 
@@ -95,7 +95,50 @@ gh search issues "<描述>" --search-type hybrid --limit 20     # 关键词+语�
 `repo:owner/name` `is:open|closed` `is:merged|unmerged` `author:@me` `in:title|body|comments`
 `label:bug` `language:go` `stars:>1000` `topic:mcp` `comments:>5` `created:>2025-01-01`
 
-## 三、输出规范（关键）
+## 三、读正文：issue / PR / 评论（只读）
+
+**为什么必须有**：很多答案不在代码里，而在 issue 正文或某条评论里
+（"这个坑有人提过吗""最后是装老版本绕过去的"）。搜索只吐元数据是不够的，
+要能钻进去读。
+
+### 单条详情
+```bash
+gh issue view 123 --repo owner/repo                # 正文
+gh issue view 123 --repo owner/repo --comments     # 正文 + 全部评论（最常用）
+gh pr view 456 --repo owner/repo --comments
+
+# 结构化取（要批量处理时用）
+gh issue view 123 --repo owner/repo --json number,title,body,state,comments,labels,createdAt,closedAt
+gh pr view 456 --repo owner/repo --json number,title,body,state,merged,mergedAt,comments,reviews
+```
+
+### 直接搜评论内容（答案藏在评论里的最佳入口）
+```bash
+gh search issues --repo owner/repo --match comments "<报错原文或关键词>" --limit 20
+gh search issues --match title,body,comments "<关键词>" --limit 30      # 跨域全 GitHub 搜
+gh api "search/issues?q=repo:owner/repo+<关键词>+in:comments" --jq '.items[].html_url'
+```
+`--match` 取值范围：`title` / `body` / `comments`（可组合）。
+
+### 标准姿势：先搜 → 挑 → 读 → 总结
+```bash
+# 1) 搜，拿到候选编号
+gh search issues "<一句话/报错>" --search-type semantic --limit 10 \
+  --json number,title,repository,commentsCount --jq '.[] | "\(.repository.nameWithOwner)	\(.number)	评论\(.commentsCount)	\(.title)"'
+
+# 2) 按相关度挑前 3~5 条读正文+评论（控制 token，不要无脑全读）
+for id in 123 456 789; do
+  echo "===== #$id ====="
+  gh issue view "$id" --repo owner/repo --comments
+done
+
+# 3) 按下面格式总结
+```
+- 命中超过 10 条时**只读前 3~5 条**，其余给出编号列表让用户自己挑，别一次读完。
+- 评论特别长（几十条）时：先读正文 + 最后几条 + 带 `fixed`/`workaround`/`solution` 字样的。
+- 想看结论优先的：`gh pr view N --json reviews` 找 approve 后的总结。
+
+## 四、输出规范（关键）
 
 **不要倒原始结果列表。** 用户要的是"都给我查出来 + 我下一步看哪个"，所以每次检索都收敛成：
 
@@ -119,9 +162,12 @@ confidence=high|medium|low
 - 结果太少 → 换限定词/去掉 `repo:` 再搜一轮，并说明换了什么
 - 结果太多 → 加 `language:` / `stars:>N` / `is:merged` 收窄
 
-## 四、边界
+## 五、边界
 
-- **只读**：本技能不产生 GitHub 上的任何变更。
+- **只读**：本技能不产生 GitHub 上的任何变更。读再多 issue / PR / 评论都属于"查"，放开读。
+- **读 ≠ 操作**：本期"读正文并总结"归本技能；但只要涉及**写**（发评论、加标签、关 issue、
+  开 PR、合并、评审结论），一律停手转给 `gh-ops`。
+  典型分界：用户说"总结一下这些 issue"→ 本技能；"去那个 issue 底下回一句"→ gh-ops。
 - 用户要"提 PR / 合并 / 建仓库 / 打 tag / 发版 / 跑 Actions" → 交给 `gh-ops`。
 - 认证状态、token 优先级、Windows 坑 → 看 `gh-ops` 的 `references/troubleshooting.md`
   （`gh auth status` 与 `scripts/preflight.sh` 两边通用）。

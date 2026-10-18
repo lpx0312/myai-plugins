@@ -153,8 +153,10 @@ PR:     #123 URL（草稿/就绪，检查: 3✔ 0✘ 1⏳）
 | 打 tag、发 release、传附件 | **gh-ops** |
 | 触发 workflow、看日志、重跑、secret/variable、ruleset | **gh-ops** |
 | 搜 GitHub 上的项目 / issue / PR / 代码 | `github-kb` |
+| 读 issue / PR 的正文与评论并总结（只读） | `github-kb` |
 | clone 仓库进 KB、维护 `GITHUB_KB.md` 目录 | `github-kb` |
 | "GitHub 上有没有人遇到过这个报错" | `github-kb` |
+| 发评论、加/删标签、开关 issue/PR、写 `gh api` 的写操作 | **gh-ops** |
 | 本地 git 的 commit/rebase/stash | 直接用 git，两个都不管 |
 
 用户一句话里既有"查"又有"改"：先查（github-kb 的检索套路），再改（本技能），
