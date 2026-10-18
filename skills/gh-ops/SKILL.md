@@ -141,7 +141,26 @@ PR:     #123 URL（草稿/就绪，检查: 3✔ 0✘ 1⏳）
 风险:   未跑/未验证/待人工的项
 ```
 
-## 6. 取 ID / 打表用 jq，不要用 --template
+## 6. 与 github-kb 的分工（写 vs 只读）
+
+一句话边界：**本技能负责"改 GitHub"，`github-kb` 负责"查 GitHub + 管本地知识库"。**
+
+| 请求 | 归谁 |
+|---|---|
+| 建仓库、改仓库设置、删仓库 | **gh-ops** |
+| 提 PR、评审、合并、重开、关闭 | **gh-ops** |
+| 建 issue / 加标签 / 关闭 issue | **gh-ops** |
+| 打 tag、发 release、传附件 | **gh-ops** |
+| 触发 workflow、看日志、重跑、secret/variable、ruleset | **gh-ops** |
+| 搜 GitHub 上的项目 / issue / PR / 代码 | `github-kb` |
+| clone 仓库进 KB、维护 `GITHUB_KB.md` 目录 | `github-kb` |
+| "GitHub 上有没有人遇到过这个报错" | `github-kb` |
+| 本地 git 的 commit/rebase/stash | 直接用 git，两个都不管 |
+
+用户一句话里既有"查"又有"改"：先查（github-kb 的检索套路），再改（本技能），
+并在汇报里分开说"查到什么"和"改了什么"。
+
+## 7. 取 ID / 打表用 jq，不要用 --template
 
 `--template` 是 Go 模板，会把数值型 ID 渲染成科学计数法（`3.8992700359e+10`），取 run/job 的
 databaseId 时必错：
@@ -153,7 +172,7 @@ gh run list --limit 3 --json databaseId,status,conclusion --jq '.[] | "\(.databa
 jq 插值 `\(…)` 必须落在 jq 的双引号字符串内，外壳用单引号：
 `--jq '"state=\(.state)"'`。
 
-## 7. 实测记录
+## 8. 实测记录
 
 2026-10-17 在 `lpx0312/gh-ops-selftest`（临时私有仓库，已删）端到端跑通并按结果修订本手册：
 
@@ -169,7 +188,9 @@ jq 插值 `\(…)` 必须落在 jq 的双引号字符串内，外壳用单引号
 | `gh run list --template '{{.databaseId}}'` | ❌ 渲染成 `3.8992700359e+10` → 已改写为 --json/--jq |
 | `gh repo delete --yes` | ✅ 随后 `gh repo view` 报 Could not resolve |
 
-## 8. 参考文件
+## 9. 参考文件
+
+> 相关但不同职责：`github-kb`（只读检索 + 本地知识库 `D:\AI\github-code`）。
 
 - `references/repo.md` — 建/改/迁移/删除仓库、fork、模板、可见性、迁移
 - `references/pr.md` — PR 全生命周期、fork PR、评审、合并策略、auto-merge、冲突处理

@@ -53,7 +53,11 @@ gh pr list --json number,title,statusCheckRollup --jq '.[] | select(.statusCheck
 gh repo view --json nameWithOwner,visibility
 gh run list --json databaseId,conclusion
 ```
-不确定有哪些字段：`gh pr view --json 0` 会报错并列出可用字段。
+不确定有哪些字段：**`--json` 后面不写字段**就打印全部可用字段，挑完再收窄（比报错法更省事）。
+
+⚠️ `--template` / `-T` 在 `gh pr create` / `gh issue create` 上是 **PR/issue 正文模板**
+（`--template` 指向 `.github/pull_request_template.md` 之类的文件），**不是** Go 模板。
+用之前先 `--help` 确认你撞上的是哪一个。
 
 Go 模板替代 jq：
 ```bash

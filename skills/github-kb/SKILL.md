@@ -1,155 +1,128 @@
 ---
 name: github-kb
-description: Manage a local GitHub knowledge base and provide GitHub search capabilities via gh CLI. Use when users ask about repos, PRs, issues, request to clone GitHub repositories, explore codebases, or need information about GitHub projects. Supports searching GitHub via gh CLI and managing local KB with GITHUB_KB.md catalog. Configure via GITHUB_TOKEN and GITHUB_KB_PATH environment variables.
+description: 本地 GitHub 知识库 + GitHub 全网检索（只读）。维护 D:\AI\github-code 下已克隆仓库的 GITHUB_KB.md 目录；用 gh search 搜仓库/issue/PR/代码来回答"GitHub 上有没有 X、谁遇到过我这个问题"。当用户说"clone 到知识库""找 GitHub 上的项目""帮我查下这个报错在 GitHub 上有没有人提过""搜 issue / PR"时使用。不做任何写操作——建仓库、提 PR、评审、合并、打 tag、发 release、跑 Actions 一律交给 skill gh-ops。
+license: MIT
 ---
 
-# GitHub Knowledge Base
+# GitHub 知识库（本地 KB + 全网检索）
 
-Manage a local GitHub knowledge base and provide GitHub search capabilities via gh CLI. Key file: GITHUB_KB.md at the root of the KB directory catalogs all projects with brief descriptions.
+**定位：只读。** 两件事：
 
-## Configuration
+1. **本地 KB**：把仓库克隆到知识库目录，维护 `GITHUB_KB.md` 目录，之后可离线翻代码。
+2. **全网检索**：用 `gh search` 在 GitHub 上找仓库、issue、PR、代码，回答"有没有 X / 谁遇到过这个问题"。
 
-Set environment variables before use:
-- `GITHUB_TOKEN` - GitHub Personal Access Token (optional, for private repos)
-- `GITHUB_KB_PATH` - Path to local KB directory (default: `D:\AI\github-code`)
+**不做**（交给 `gh-ops`）：建仓、提 PR、评审、合并、打 tag、发 release、触发 Actions、secret/ruleset、`gh api` 写操作。
+用户一句话里同时要"查"又要"改"时：本技能负责查，改的部分转给 `gh-ops`。
 
-Example:
-```bash
-export GITHUB_TOKEN="xxxx..."
-export GITHUB_KB_PATH="/your/path/github-kb"
-```
+## 配置
 
-**Token Privacy:** Never hardcode tokens. Inject via environment variables or container secrets.
+| 变量 | 本机值 | 说明 |
+|---|---|---|
+| `GITHUB_KB_PATH` | `D:\AI\github-code` | KB 根目录（当前 30 个仓库，约 20 条目录） |
+| `GITHUB_TOKEN` | 已由环境提供 | 私有仓库与提高限流；不要硬编码 |
 
-## GitHub CLI (gh)
-
-**Requirement:** GitHub CLI must be installed and authenticated.
-
-**Installation:**
-- **macOS:** `brew install gh`
-- **Linux:** `apt install gh` or see [official install guide](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
-- **Windows:** `winget install GitHub.cli`
-
-**Authentication:**
-```bash
-# Interactive login
-gh auth login
-
-# Or use token from GITHUB_TOKEN env var
-gh auth login --with-token <(echo "$GITHUB_TOKEN")
-```
-
-**Verify:** `gh auth status`
-
-If `gh` is not installed or not authenticated, skip search operations and use only local KB features.
-
-### Searching Repos
-
-```bash
-# Search repos by keyword
-gh search repos <query> [--limit <n>]
-
-# Examples:
-gh search repos "typescript cli" --limit 10
-gh search repos "language:python stars:>1000" --limit 20
-gh search repos "topic:mcp" --limit 15
-```
-
-**Search qualifiers:**
-- `language:<lang>` - Filter by programming language
-- `stars:<n>` or `stars:><n>` - Filter by star count
-- `topic:<name>` - Filter by topic
-- `user:<owner>` - Search within a user's repos
-- `org:<org>` - Search within an organization
-
-### Searching Issues
-
-```bash
-gh search issues "react hooks bug" --limit 20
-gh search issues "repo:facebook/react state:open" --limit 30
-gh search issues "language:typescript label:bug" --limit 15
-```
-
-**Search qualifiers:**
-- `repo:<owner/repo>` - Search in specific repository
-- `state:open|closed` - Filter by issue state
-- `author:<username>` - Filter by author
-- `label:<name>` - Filter by label
-- `language:<lang>` - Filter by repo language
-- `comments:<n>` or `comments:><n>` - Filter by comment count
-
-### Searching Pull Requests
-
-```bash
-# Search PRs
-gh search prs <query> [--limit <n>]
-
-# Examples:
-gh search prs "repo:vercel/next.js state:open" --limit 30
-gh search prs "language:go is:merged" --limit 15
-```
-
-**Search qualifiers:**
-- `repo:<owner/repo>` - Search in specific repository
-- `state:open|closed|merged` - Filter by PR state
-- `author:<username>` - Filter by author
-- `label:<name>` - Filter by label
-- `language:<lang>` - Filter by repo language
-- `is:merged|unmerged` - Filter by merge status
-
-### Viewing PR/Issue Details
-
-```bash
-# View issue/PR details
-gh issue view <number> --repo <owner/repo>
-gh pr view <number> --repo <owner/repo>
-
-# View with comments
-gh issue view <number> --repo <owner/repo> --comments
-gh pr view <number> --repo <owner/repo> --comments
-```
-
-## Local Knowledge Base Workflow
-
-### Querying About a Repo in KB
-
-1. Read GITHUB_KB.md to understand what projects exist
-2. Locate the project directory under ${GITHUB_KB_PATH:-/home/node/clawd/github-kb}/
-
-### Cloning a New Repo to KB
-
-1. Search GitHub if the full repo name is not known
-2. Clone to KB directory:
-   ```bash
-   git clone https://github.com/<owner>/<name>.git ${GITHUB_KB_PATH:-/home/node/clawd/github-kb}/<name>
-   ```
-3. Generate project description: Read README or key files to understand the project
-4. Update GITHUB_KB.md: Add entry for the new repo following the existing format:
-   ```markdown
-   ### [<name>](/<name>)
-   Brief one-line description of what the project does. Additional context if useful (key features, tech stack, etc.).
-   ```
-5. Confirm completion: Tell user the repo was cloned and where to find it
-
-### Default Clone Location
-
-If user says "clone X" without specifying a directory, default to ${GITHUB_KB_PATH:-/home/node/clawd/github-kb}/.
-
-## GITHUB_KB.md Format
-
-The catalog file follows this structure:
+本机 KB 已有 `GITHUB_KB.md`，条目格式：
 
 ```markdown
-# GitHub Knowledge Base
+## 分类名
 
-This directory contains X GitHub projects covering various domains.
-
----
-
-## Category Name
-
-### [project-name](/project-name)
-Brief description of the project.
+### [repo-name](/repo-name)
+一句话说明这个项目做什么、关键技术点。
 ```
 
-Maintain categorization and consistent formatting when updating.
+## 一、本地 KB 工作流
+
+### 查：先本地后远端
+```bash
+ls "$GITHUB_KB_PATH"                       # 看有什么
+grep -n -i "关键词" "$GITHUB_KB_PATH/GITHUB_KB.md"   # 先在目录里找
+rg -l "关键词" "$GITHUB_KB_PATH" --max-depth 2       # 再在代码里找
+```
+命中本地就别去联网了。
+
+### 克隆进 KB（用户说"clone X"默认放这里）
+1. 名字不确定 → 先 `gh search repos <关键词>` 确认 `owner/name`
+2. `git clone https://github.com/<owner>/<name>.git "$GITHUB_KB_PATH/<name>"`
+   （或 `gh repo clone <owner>/<name> "$GITHUB_KB_PATH/<name>"`）
+3. 读 README / 关键文件，写一句话说明
+4. 往 `GITHUB_KB.md` **对应分类**下追加条目（格式照上表，不重排已有内容）
+5. 回报：克隆到哪 + 目录已更新
+
+**注意**：已存在的目录不要静默覆盖；确实要更新就 `git -C <dir> pull --ff-only`。
+
+## 二、全网检索（gh search）
+
+| 目标 | 命令 |
+|---|---|
+| 找项目 | `gh search repos "<关键词>" --limit 10 --sort stars` |
+| 找项目（按语言/星数/tag） | `gh search repos "language:go stars:>1000 topic:k8s" --limit 20` |
+| 找 issue | `gh search issues "<报错/关键词>" --limit 20` |
+| 在某仓库里找 issue | `gh search issues --repo owner/repo <关键词> state:open` |
+| 找 PR | `gh search prs --repo owner/repo <关键词> is:merged` |
+| 找代码片段 | `gh search code "<函数名>" --language go --limit 20` |
+| 找 commit | `gh search commits "<信息>" --repo owner/repo` |
+| 结构化输出 | 加 `--json fullName,stargazersCount,description` / `--jq` |
+
+### ⚠️ 搜索语法坑（gh 官方 skill 明确警告，实测复现）
+
+**限定词必须各写一个 token，不能整串加引号**：
+
+```bash
+gh search issues repo:cli/cli is:open author:monalisa     # ✅ 正确
+gh search issues "repo:cli/cli is:open"                   # ❌ 被当成一个 keyword → Invalid search query
+gh search repos "language:python stars:>1000"             # ❌ 同上，实测返回 0 条
+gh search repos language:python stars:>1000               # ✅
+```
+
+规则：**只有多词自由文本才加引号**（`gh search issues "broken feature"`）；
+`repo:` / `is:` / `author:` / `label:` / `language:` / `stars:` / `topic:` 一律裸写。
+很多限定词也有对应 flag（`--repo`、`--author`、`--label`），可用 flag 就用。
+
+### Bot 作者
+`--author dependabot` 匹配不到（Bot 是 GitHub App 身份）→
+用 `--app dependabot`（会自动展开成 `author:app/dependabot`）或 `--author "dependabot[bot]"`。
+
+### 自然语言提问用语义搜索
+用户是"描述现象"而不是给关键词时（"我这个报错在 GitHub 上有人提过吗"），加语义检索：
+
+```bash
+gh search issues "<一句自然语言描述>" --search-type semantic --limit 20
+gh search issues "<描述>" --search-type hybrid --limit 20     # 关键词+语义混合
+```
+`--search-type` 只对 issues 有效（github.com / GHEC），默认 `lexical`（精确匹配）。
+
+### 常用限定词速查
+`repo:owner/name` `is:open|closed` `is:merged|unmerged` `author:@me` `in:title|body|comments`
+`label:bug` `language:go` `stars:>1000` `topic:mcp` `comments:>5` `created:>2025-01-01`
+
+## 三、输出规范（关键）
+
+**不要倒原始结果列表。** 用户要的是"都给我查出来 + 我下一步看哪个"，所以每次检索都收敛成：
+
+```markdown
+问题：<用户原问题>
+命中：<N> 条（已按相关度筛到前 <M> 条）
+
+1. **owner/repo#123 — <标题>**
+   为什么相关：一句话
+   链接：url
+
+suspected_scope=<问题落在哪块代码/哪个组件>
+strongest_evidence=<最强的一条证据>
+next_best_action=<open code / open issue / clone 进 KB>
+next_target=<owner/repo#123 或 path/to/file.go>
+confidence=high|medium|low
+```
+
+配套动作：
+- 命中仓库值得留着 → 问用户要不要 clone 进 KB（不要擅自 clone）
+- 结果太少 → 换限定词/去掉 `repo:` 再搜一轮，并说明换了什么
+- 结果太多 → 加 `language:` / `stars:>N` / `is:merged` 收窄
+
+## 四、边界
+
+- **只读**：本技能不产生 GitHub 上的任何变更。
+- 用户要"提 PR / 合并 / 建仓库 / 打 tag / 发版 / 跑 Actions" → 交给 `gh-ops`。
+- 认证状态、token 优先级、Windows 坑 → 看 `gh-ops` 的 `references/troubleshooting.md`
+  （`gh auth status` 与 `scripts/preflight.sh` 两边通用）。
+- 本地 `git` 操作（commit/rebase/stash）用 git 本身，不属于本技能。
