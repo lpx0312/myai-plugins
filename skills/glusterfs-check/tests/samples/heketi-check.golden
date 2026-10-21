@@ -1,0 +1,32 @@
+# 结构样例（非逐字 diff 用）：secret 一律显示为 ***
+##META host=<host> date=<ISO8601> lc=C user=admin cred_src=/etc/heketi/heketi.json
+##HK-01 CMD: systemctl is-active heketi
+active
+##STATE HK-01 OK
+##HK-01b CMD: heketi-cli --version
+heketi-cli <x.y.z>
+##STATE HK-01b OK
+##HK-01c CMD: heketi-cli --user admin --secret *** cluster list
+Clusters:
+Id:<clusterid> [file][block]
+##STATE HK-01c OK
+##HK-02 CMD: timeout 60s heketi-cli --user admin --secret *** topology info
+Cluster Id: <clusterid>
+    Nodes:
+	Node Id: <nodeid>
+	State: online
+	Zone: <n>
+	Devices:
+		Id:<deviceid>   Name:/dev/sdb   State:online   Size (GiB):<n>   Used (GiB):<n>   Free (GiB):<n>
+##STATE HK-02 OK
+##HK-04 CMD: heketi-cli --user admin --secret *** volume list
+Id:<volid>    Cluster:<clusterid>    Name:vol_<id>
+##STATE HK-04 OK
+##HK-04b CMD: gluster v list
+vol_<id>
+##STATE HK-04b OK
+##END
+# 凭据缺失时的形态：
+##HK-00 CMD: (skipped) 无法从 /etc/heketi/heketi.json 取得凭据
+##STATE HK-00 SKIP no-credentials
+##END

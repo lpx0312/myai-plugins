@@ -1,0 +1,22 @@
+# 结构样例（非逐字 diff 用）：需先在目标集群上跑一遍采集脚本
+##META host=<host> date=<ISO8601> lc=C
+##CTX CMD: kubectl config current-context
+<context-name>
+##STATE CTX OK
+##K8S-01 CMD: kubectl get sc -o json
+{"apiVersion":"v1","items":[{"metadata":{"name":"<sc>"},"provisioner":"kubernetes.io/glusterfs","parameters":{"resturl":"...","clusterid":"...","secretName":"...","secretNamespace":"..."}}]}
+##SIZE K8S-01 bytes=<n>
+##STATE K8S-01 OK
+##K8S-03 CMD: kubectl get pvc -A -o json
+{"apiVersion":"v1","items":[{"metadata":{"namespace":"<ns>","name":"<pvc>"},"status":{"phase":"Bound"}}]}
+##SIZE K8S-03 bytes=<n>
+##STATE K8S-03 OK
+##K8S-03b CMD: kubectl get pv -o json
+{"apiVersion":"v1","items":[{"spec":{"capacity":{"storage":"<size>"},"glusterfs":{"path":"vol_<id>"},"claimRef":{"namespace":"<ns>","name":"<pvc>"}}}]}
+##SIZE K8S-03b bytes=<n>
+##STATE K8S-03b OK
+##K8S-05 CMD: kubectl get events -A --field-selector type=Warning -o json
+{"apiVersion":"v1","items":[]}
+##SIZE K8S-05 bytes=<n>
+##STATE K8S-05 OK
+##END

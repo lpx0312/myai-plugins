@@ -1,0 +1,3 @@
+Filesystem                                                                        1-blocks      Used Available Use% Mounted on
+/dev/mapper/vg_21dfa6cf69e974f184ddf6a3f364d034-brick_bfa4efcf358ef6a1e3d04140ea5cadeb 5368709120 214748364.8 5153960755.2 92% /var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_bfa4efcf358ef6a1e3d04140ea5cadeb
+/dev/mapper/vg_21dfa6cf69e974f184ddf6a3f364d034-brick_f38b3b09dd3dcb6a656198779d5ff210 5368709120 161061273.6 5207647846.4 3% /var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_f38b3b09dd3dcb6a656198779d5ff210

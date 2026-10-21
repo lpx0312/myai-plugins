@@ -1,0 +1,3 @@
+Warning: Permanently added '192.168.1.44' (ECDSA) to the list of known hosts.
+##F /var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba/brick /var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba /dev/mapper/vg_ec6665683a614441631a8c9ac56a3bad-brick_09fb8f423308736bbbd667746dd67cba xfs
+##F /var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_8a2950553edf213448ea3ccfeaf7cfa0/brick /var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_8a2950553edf213448ea3ccfeaf7cfa0 /dev/mapper/vg_ec6665683a614441631a8c9ac56a3bad-brick_8a2950553edf213448ea3ccfeaf7cfa0 xfs

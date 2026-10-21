@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cliOutput>
+  <opRet>0</opRet>
+  <opErrno>0</opErrno>
+  <opErrstr/>
+  <volStatus>
+    <volumes>
+      <volume>
+        <volName>vol_0da3b44ec6c7c94061c94893de3ff02f</volName>
+        <nodeCount>6</nodeCount>
+        <node><hostname>192.168.1.43</hostname><path>/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_8f87fe26dd5700ce5614bd25aabbe9d7/brick</path><peerid>60805a0b-c2b9-4e7b-888d-49f168861bd2</peerid><status>0</status><port>49152</port><ports><tcp>49152</tcp><rdma>N/A</rdma></ports><pid>1976</pid></node>
+        <node><hostname>192.168.1.42</hostname><path>/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_f38b3b09dd3dcb6a656198779d5ff210/brick</path><peerid>d7984482-710d-4f99-ba12-421a76345650</peerid><status>1</status><port>49153</port><ports><tcp>49153</tcp><rdma>N/A</rdma></ports><pid>2682</pid></node>
+        <node><hostname>192.168.1.44</hostname><path>/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba/brick</path><peerid>9003af9b-ab99-473b-869e-4c9f2d7d0166</peerid><status>1</status><port>49152</port><ports><tcp>49152</tcp><rdma>N/A</rdma></ports><pid>1928</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>localhost</path><peerid>d7984482-710d-4f99-ba12-421a76345650</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>2749</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>glusterfs-arbiter</path><peerid>9003af9b-ab99-473b-869e-4c9f2d7d0166</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>1945</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>glusterfs02</path><peerid>60805a0b-c2b9-4e7b-888d-49f168861bd2</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>1993</pid></node>
+        <tasks/>
+      </volume>
+      <volume>
+        <volName>vol_7dbcea5fa093c147071e8145cb74e3ce</volName>
+        <nodeCount>6</nodeCount>
+        <node><hostname>192.168.1.44</hostname><path>/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_8a2950553edf213448ea3ccfeaf7cfa0/brick</path><peerid>9003af9b-ab99-473b-869e-4c9f2d7d0166</peerid><status>1</status><port>49153</port><ports><tcp>49153</tcp><rdma>N/A</rdma></ports><pid>2584</pid></node>
+        <node><hostname>192.168.1.43</hostname><path>/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_612275a07c3bb947dd3b0ed3252eb53b/brick</path><peerid>60805a0b-c2b9-4e7b-888d-49f168861bd2</peerid><status>1</status><port>49153</port><ports><tcp>49153</tcp><rdma>N/A</rdma></ports><pid>2568</pid></node>
+        <node><hostname>192.168.1.42</hostname><path>/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_bfa4efcf358ef6a1e3d04140ea5cadeb/brick</path><peerid>d7984482-710d-4f99-ba12-421a76345650</peerid><status>1</status><port>49152</port><ports><tcp>49152</tcp><rdma>N/A</rdma></ports><pid>3609</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>localhost</path><peerid>d7984482-710d-4f99-ba12-421a76345650</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>2749</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>glusterfs02</path><peerid>60805a0b-c2b9-4e7b-888d-49f168861bd2</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>1993</pid></node>
+        <node><hostname>Self-heal Daemon</hostname><path>glusterfs-arbiter</path><peerid>9003af9b-ab99-473b-869e-4c9f2d7d0166</peerid><status>1</status><port>N/A</port><ports><tcp>N/A</tcp><rdma>N/A</rdma></ports><pid>1945</pid></node>
+        <tasks/>
+      </volume>
+    </volumes>
+  </volStatus>
+</cliOutput>

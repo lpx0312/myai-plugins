@@ -1,0 +1,21 @@
+# 结构样例（非逐字 diff 用）
+##META host=<host> date=<ISO8601> lc=C
+##BRICKLIST count=<n>
+/var/lib/heketi/mounts/vg_<vgid>/brick_<brickid>/brick
+##STATE BRICKLIST OK
+/var/lib/heketi/mounts/vg_<vgid>/brick_<brickid>/brick /dev/mapper/vg_<vgid>-brick_<brickid> xfs
+##STATE L1-11[/var/lib/heketi/mounts/vg_<vgid>/brick_<brickid>/brick] OK
+##L1-09 CMD: df -P -B1 <brick dirs>
+<dev> <total> <used> <avail> <pct> <mount>
+##STATE L1-09 OK
+##L1-09i CMD: df -P -i <brick dirs>
+<dev> <inodes> <iused> <ifree> <ipct> <mount>
+##STATE L1-09i OK
+##L1-10 CMD: lvs --noheadings -o lv_name,vg_name,pool_lv,lv_size,data_percent,metadata_percent
+brick_<brickid> vg_<vgid> tp_<poology> <size> <data_pct> <meta_pct>
+##STATE L1-10 OK
+# VGS 仅作参考，不进 L1-12 判据；L1-12 由 lvs 的 lv_size 聚合得出
+##VGS CMD: vgs --noheadings -o vg_name,vg_size,vg_free
+vg_<vgid> <size> <free>
+##STATE VGS OK
+##END

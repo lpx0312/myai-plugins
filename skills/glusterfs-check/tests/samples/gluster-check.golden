@@ -1,0 +1,31 @@
+# 结构样例（非逐字 diff 用）：id / IP / 时间均已脱敏成占位符
+##META host=<host> date=<ISO8601> lc=C
+##L1-01 CMD: systemctl is-active glusterd
+active
+##STATE L1-01 OK
+##L1-02 CMD: gluster --version
+glusterfs <x.y>
+##STATE L1-02 OK
+##L1-02b CMD: rpm -q glusterfs-server
+glusterfs-server-<x.y>-1.el7.x86_64
+##STATE L1-02b OK
+##L1-03 CMD: gluster peer status
+Number of Peers: <N-1>
+Hostname: <peer-host>
+State: Peer in Cluster (Connected)
+##STATE L1-03 OK
+##L1-04 CMD: timeout 60s gluster v info --xml
+<cliOutput>...<volume><name>vol_<id></name>...</volume>...</cliOutput>
+##STATE L1-04 OK
+##L1-05 CMD: timeout 60s gluster v status --xml
+<cliOutput>...<node><hostname><ip></hostname><status>1</status><port>4915x</port></node>...</cliOutput>
+##STATE L1-05 OK
+##L1-13 vol=vol_<id> snapshotCount=0
+##STATE L1-13[vol_<id>] OK
+##L1-07 vol=vol_<id> replica=3 arbiter=0 disperse=0
+##L1-07[vol_<id>] CMD: timeout 120s gluster v heal vol_<id> info summary --xml
+<cliOutput><healInfo><bricks><brick><status>Connected</status><totalNumberOfEntries>0</totalNumberOfEntries></brick></bricks></healInfo></cliOutput>
+##STATE L1-07[vol_<id>] OK
+##L1-07[vol_<id>] CMD: (skipped) gluster v heal vol_<id2> info summary --xml
+##STATE L1-07[vol_<id2>] SKIP distribute-only
+##END

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cliOutput>
+  <healInfo>
+    <bricks>
+      <brick hostUuid="S">
+        <name>y</name>
+        <status>Connected</status>
+        <totalNumberOfEntries>0</totalNumberOfEntries>
+        <numberOfEntriesInHealPending>0</numberOfEntriesInHealPending>
+        <numberOfEntriesInSplitBrain>0</numberOfEntriesInSplitBrain>
+        <numberOfEntriesPossiblyHealing>0</numberOfEntriesPossiblyHealing>
+      </brick>      <brick hostUuid="d">
+        <name>7</name>
+        <status>Connected</status>
+        <totalNumberOfEntries>0</totalNumberOfEntries>
+        <numberOfEntriesInHealPending>0</numberOfEntriesInHealPending>
+        <numberOfEntriesInSplitBrain>0</numberOfEntriesInSplitBrain>
+        <numberOfEntriesPossiblyHealing>0</numberOfEntriesPossiblyHealing>
+      </brick>      <brick hostUuid="9">
+        <name>0</name>
+        <status>Connected</status>
+        <totalNumberOfEntries>0</totalNumberOfEntries>
+        <numberOfEntriesInHealPending>0</numberOfEntriesInHealPending>
+        <numberOfEntriesInSplitBrain>0</numberOfEntriesInSplitBrain>
+        <numberOfEntriesPossiblyHealing>0</numberOfEntriesPossiblyHealing>
+      </brick>
+    </bricks>
+  </healInfo>
+  <opRet>0</opRet>
+  <opErrno>0</opErrno>
+  <opErrstr/>
+</cliOutput>
