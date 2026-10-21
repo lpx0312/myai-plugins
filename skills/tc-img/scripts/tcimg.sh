@@ -106,13 +106,28 @@ fi
 
 # ---- 上传单张：成功 stdout 输出直链；失败 stderr 输出原因 ----
 upload_one() {
-  local f=$1 body="$TMP_DIR/resp.json" code msg
+  local f=$1 body="$TMP_DIR/resp.json" code msg base safe ext src
+  # 统一先 cp 到纯 ASCII 临时路径再上传（Windows 专属坑）：
+  #  mingw32 curl 的 fopen 走 ANSI(GBK) 代码页，路径含中文时须靠 MSYS 参数转换才能匹配
+  #  NTFS 文件名；但同一 -F 里 multipart filename 又必须 ASCII（GBK 字节会被 UTF-8 服务端
+  #  MySQL 拒收 400）——两者对字节的要求冲突。落到 ASCII 路径后路径/filename 双双恒定，
+  #  任何 中文目录/中文文件名/Windows风格路径 组合都稳定。原名保留在 md 的 alt 里。
+  base=$(basename "$f")
+  safe=$(printf '%s' "${base%.*}" | LC_ALL=C tr -cd 'A-Za-z0-9._-' | cut -c1-60)
+  ext=${base##*.}
+  case "$ext" in [A-Za-z0-9]*) ;; *) ext=png ;; esac
+  [ -n "$safe" ] || safe="img-$(date +%Y%m%d%H%M%S)"
+  src="$TMP_DIR/up-$$-$RANDOM$RANDOM.${ext}"
+  cp -- "$f" "$src"
+  # ;filename= 会让 MSYS 对 curl 参数的 POSIX→Windows 路径转换失效（分号打断识别，
+  # curl 26 读不到文件），必须主动转成 Windows 原生正斜杠路径绕过转换；Linux 无 cygpath 原样。
+  command -v cygpath >/dev/null 2>&1 && src=$(cygpath -m "$src")
   if [ -n "$ALBUM" ]; then
     code=$(curl -sS --connect-timeout 15 --max-time 120 -o "$body" -w '%{http_code}' \
-      -X POST "$TCIMG_URL/api/1/upload" -F "source=@$f" -F "key=$TCIMG_TOKEN" -F "album_id=$ALBUM") || return 1
+      -X POST "$TCIMG_URL/api/1/upload" -F "source=@$src;filename=${safe}.${ext}" -F "key=$TCIMG_TOKEN" -F "album_id=$ALBUM") || return 1
   else
     code=$(curl -sS --connect-timeout 15 --max-time 120 -o "$body" -w '%{http_code}' \
-      -X POST "$TCIMG_URL/api/1/upload" -F "source=@$f" -F "key=$TCIMG_TOKEN") || return 1
+      -X POST "$TCIMG_URL/api/1/upload" -F "source=@$src;filename=${safe}.${ext}" -F "key=$TCIMG_TOKEN") || return 1
   fi
   if [ "$code" = 200 ] && jq -e '(.status_code==200) and (.image.url|type=="string")' "$body" >/dev/null 2>&1; then
     jq -r '.image.url' "$body"
