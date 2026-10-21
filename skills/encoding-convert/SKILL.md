@@ -52,6 +52,7 @@ bash "<skill目录>/scripts/encoding-convert.sh" --keep-eol <目录>       # 只
 4. **UTF-16 文件**（Windows 记事本产物）靠文件头 BOM（FF FE / FE FF）识别，Git Bash 的 `file` 会把它误判成二进制，脚本已用 BOM 头兜底；但**无 BOM 的 UTF-16 仍会被当二进制跳过**（显示 `[SKIP-BIN]`），遇到可疑时手工 `file -bi` 确认。
 5. 纯 ASCII 内容的 GBK 文件检测为 `us-ascii`，语义上已是 UTF-8 子集，只处理其换行/BOM，不动编码。
 6. 写回用 `cat > 原文件` 而非 `mv`，保留原文件的权限和属主（root 场景重要）。
+7. **验证 CR 时不要用本机 `grep`**：本机 shell 的 `grep` 可能被函数替换为 ugrep，`grep -c $'\r'` 对纯 LF 文件会给出假计数。验证一律用字节级手段：`od -c <文件>` 看行尾，或 `tr -dc '\r' < <文件> | wc -c`（脚本内部已用后者）。
 
 ## 何时不用本 skill
 

@@ -90,7 +90,8 @@ has_utf8_bom() {
 }
 
 has_cr() {
-  LC_ALL=C grep -q $'\r' "$1" 2>/dev/null
+  # 纯字节统计，不依赖 grep（本机 grep 可能被 shell 函数替换为 ugrep，行为不一致）
+  [[ "$(tr -dc '\r' < "$1" | wc -c)" -gt 0 ]]
 }
 
 # 源编码候选（按 file 报告分派；未知编码走 GBK 系启发）
