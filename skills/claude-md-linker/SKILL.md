@@ -1,6 +1,6 @@
 ---
 name: claude-md-linker
-description: 把 Claude Code 的全局指令文件 ~/.claude/CLAUDE.md 用 Windows 符号链接（symlink）统一映射到其它 AI Agent 的全局指令文件（Codex 的 ~/.codex/AGENTS.md、ZCode 的 ~/.zcode/AGENTS.md、Pi 的 ~/.pi/agent/AGENTS.md、OpenCode、Gemini CLI、Qwen Code、iFlow、Cursor、Cline、Copilot、Amazon Q 等），实现"改一处、处处同步"。当用户提到"把 CLAUDE.md 同步/软链接/映射到各 Agent / AGENTS.md"、"统一各 AI 的全局指令/记忆文件"、"让 Codex/Pi/ZCode 共用 Claude 的全局 CLAUDE.md"、"symlink CLAUDE.md to AGENTS.md"、"全局指令文件链接"、"链接全局 md"时，务必使用本技能；即使用户只说"帮我把这个 CLAUDE.md 链接过去"，也应使用。
+description: 把 Claude Code 的全局指令文件 ~/.claude/CLAUDE.md 用 Windows 符号链接（symlink）统一映射到其它 AI Agent 的全局指令文件（Codex 的 ~/.codex/AGENTS.md、ZCode 的 ~/.zcode/AGENTS.md、Pi 的 ~/.pi/agent/AGENTS.md、DSH（DeepSeek Harness）的 ~/.dsh/AGENTS.md、OpenCode、Gemini CLI、Qwen Code、iFlow、Cursor、Cline、Copilot、Amazon Q 等），实现"改一处、处处同步"。当用户提到"把 CLAUDE.md 同步/软链接/映射到各 Agent / AGENTS.md"、"统一各 AI 的全局指令/记忆文件"、"让 Codex/Pi/ZCode/DSH 共用 Claude 的全局 CLAUDE.md"、"symlink CLAUDE.md to AGENTS.md"、"全局指令文件链接"、"链接全局 md"时，务必使用本技能；即使用户只说"帮我把这个 CLAUDE.md 链接过去"，也应使用。
 ---
 
 # CLAUDE.md → 各 Agent 全局指令文件软链接器（Windows）
@@ -41,6 +41,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "<skill目录>/scripts/link-
 | Codex | `~/.codex/AGENTS.md` |
 | ZCode | `~/.zcode/AGENTS.md` |
 | Pi | `~/.pi/agent/AGENTS.md` |
+| DSH (DeepSeek Harness) | `~/.dsh/AGENTS.md` |
 | OpenCode | `~/.config/opencode/AGENTS.md` |
 | Gemini CLI | `~/.gemini/GEMINI.md` |
 | Qwen Code | `~/.qwen/QWEN.md` |

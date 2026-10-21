@@ -78,6 +78,7 @@ $defaultTargets = @(
     "$env:USERPROFILE\.codex\AGENTS.md",
     "$env:USERPROFILE\.zcode\AGENTS.md",
     "$env:USERPROFILE\.pi\agent\AGENTS.md",
+    "$env:USERPROFILE\.dsh\AGENTS.md",
     "$env:USERPROFILE\.config\opencode\AGENTS.md",
     "$env:USERPROFILE\.gemini\GEMINI.md",
     "$env:USERPROFILE\.qwen\QWEN.md",
