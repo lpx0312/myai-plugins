@@ -61,7 +61,7 @@ Linux 侧 `UserKnownHostsFile` 用 `/dev/null`；Windows 侧用 `NUL`。目的�
 | `df -P -B1 <dirs>` | L1-09 容量（按 1 字节单位，便于换百分比） | 轻 |
 | `df -P -i <dirs>` | L1-09 inode | 轻 |
 | `findmnt -n -T <dir> -o TARGET,SOURCE,FSTYPE` | L1-11 挂载点校验 | 轻 |
-| `lvs --noheadings -o lv_name,vg_name,lv_size` | L1-10 尺寸关系 | 轻 |
+| `lvs --noheadings -o lv_name,vg_name,pool_lv,lv_size,data_percent,metadata_percent` | L1-10 分配率 + L1-12 尺寸（映射看 `pool_lv` 列） | 轻 |
 | `vgs --noheadings -o vg_name,vg_size,vg_free` | 仅作参考（不进判定） | 轻 |
 | `systemctl is-active <glusterd\|heketi\|glusterfs-fstab-monitor>` | L1-01 / HK-01 | 轻 |
 | `rpm -q glusterfs-server` | 版本佐证（可选） | 轻 |
@@ -165,6 +165,9 @@ Linux 侧 `UserKnownHostsFile` 用 `/dev/null`；Windows 侧用 `NUL`。目的�
 | `heketi topology info` | 60s | DB 大时慢 |
 | `kubectl get pvc/pv/events -o json` | 60s | 超时可退化为 `--field-selector` 或单 ns |
 | 单次巡检总预算 | 10 分钟 | 超时则输出已完成部分 + `SKIP(budget)` |
+
+> shell 脚本里所有轻命令都包在 `run_to 15`（`timeout 15`）里执行；表中的超时即此口径。
+> 人读版（py）用 `threading.Timer` 实现同一超时，py2/py3 行为一致（ADR-0014）。
 
 ---
 

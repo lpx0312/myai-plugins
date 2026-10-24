@@ -1,0 +1,6 @@
+{"kind":"StorageClassList","apiVersion":"storage.k8s.io/v1","items":[
+ {"metadata":{"name":"glusterfs-storage"},"provisioner":"kubernetes.io/glusterfs",
+  "parameters":{"resturl":"http://heketi.glusterfs.svc:8080","clusterid":"f0000000000000000000000000000018","secretName":"heketi-secret","secretNamespace":"glusterfs","volumeoptions":"user.heketi.arbiter true,user.heketi.average-file-size 1024"},
+  "reclaimPolicy":"Delete","volumeBindingMode":"Immediate","allowVolumeExpansion":false},
+ {"metadata":{"name":"local-path"},"provisioner":"rancher.io/local-path"}
+]}

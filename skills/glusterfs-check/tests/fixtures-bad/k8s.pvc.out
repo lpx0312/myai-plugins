@@ -1,0 +1,8 @@
+{"kind":"PersistentVolumeClaimList","apiVersion":"v1","items":[
+ {"metadata":{"name":"data-app1","namespace":"default","creationTimestamp":"2026-10-21T03:00:00Z"},
+  "spec":{"volumeName":"pvc-a","accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}}},
+  "status":{"phase":"Bound","capacity":{"storage":"5Gi"}}},
+ {"metadata":{"name":"data-app2","namespace":"kube-system","creationTimestamp":"2026-10-21T03:30:00Z"},
+  "spec":{"volumeName":"pvc-b","accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}}},
+  "status":{"phase":"Bound","capacity":{"storage":"5Gi"}}}
+]}

@@ -18,16 +18,6 @@ export LC_ALL=C LANG=C
 
 _state() { printf '##STATE %s %s%s\n' "$1" "$2" "${3:+ $3}"; }
 
-run() {
-  local id="$1"; shift
-  local out rc
-  printf '##%s CMD: %s\n' "$id" "$*"
-  out=$("$@" 2>&1); rc=$?
-  [ -n "$out" ] && printf '%s\n' "$out"
-  if [ "$rc" -eq 0 ]; then _state "$id" OK; else _state "$id" ERR "rc=$rc"; fi
-  return 0
-}
-
 run_to() {
   local t="$1" id="$2"; shift 2
   local out rc
@@ -52,19 +42,19 @@ pick() { printf '%s' "$xml" | sed -n "s:.*<$1>\([0-9]*\)</$1>.*:\1:p" | head -1;
 
 echo "##META host=$(hostname 2>/dev/null) date=$(date -Is 2>/dev/null) lc=${LC_ALL}"
 
-run L1-01 systemctl is-active glusterd
-run L1-02 gluster --version
-run L1-02b rpm -q glusterfs-server
-run L1-03 gluster peer status
+run_to 15 L1-01 systemctl is-active glusterd
+run_to 15 L1-02 gluster --version
+run_to 15 L1-02b rpm -q glusterfs-server
+run_to 15 L1-03 gluster peer status
 run_to 60 L1-04 gluster v info --xml
 run_to 60 L1-05 gluster v status --xml
 
 HEAL_MAX="${HEAL_MAX_VOLUMES:-20}"
 idx=0
-for v in $(gluster v list 2>/dev/null); do
+for v in $(timeout 15 gluster v list 2>/dev/null); do
   idx=$((idx + 1))
 
-  if ! xml=$(gluster v info "$v" --xml 2>&1); then
+  if ! xml=$(timeout 15 gluster v info "$v" --xml 2>&1); then
     printf '%s\n' "$xml"
     _state "L1-13[$v]" SKIP "no-data"
     _state "L1-07[$v]" SKIP "no-data"

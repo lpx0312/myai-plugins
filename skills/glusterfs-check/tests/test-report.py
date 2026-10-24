@@ -24,16 +24,22 @@ SCRIPT = os.path.join(HERE, '..', 'scripts', 'gluster-health.py')
 CASES = [
     ('fixtures', ['P0 × 0', 'P1 × 0', 'P2 × 0',
                   '未发现需要处置的问题',
-                  '3/3', '卷对账一致', '2 个卷']),
-    ('fixtures-bad', ['P0 × 5', 'P1 × 1', 'P2 × 1',
+                  '3/3', '卷对账一致', '2 个卷',
+                  'context ctx-demo', 'PVC 2 个',
+                  '无 glusterfs 相关挂载类事件']),
+    ('fixtures-bad', ['P0 × 7', 'P1 × 1', 'P2 × 3',
                       '有 1/3 块砖离线', '存在脑裂 2 条',
                       '使用率 92%', '已分配 91.5%',
                       'heketi 有 1 个节点离线', '有 1 个设备离线',
-                      '有 1 个快照']),
+                      '有 1 个快照',
+                      '有 1 块孤儿砖',
+                      '允许扩容',
+                      '容量对不上：heketi 5 GiB / PV 8 GiB',
+                      '挂载反复失败且 Pod 未 Running']),
 ]
 
 # ssh 首次连接时混进 stdout 的那一行；2026-10-21 线上误报就是它造成的
-SSH_NOISE = ("Warning: Permanently added '192.168.1.44' (ECDSA) "
+SSH_NOISE = ("Warning: Permanently added '10.10.0.13' (ECDSA) "
              "to the list of known hosts.")
 
 
@@ -68,13 +74,13 @@ def unit_checks(mod):
         fails.append('缺失的砖未被标记 no-marker')
 
     # 3) heketi cluster id：cluster list 只打一串 id 时也要认出来
-    hk = mod.parse_heketi('##CLUSTER 0da3b44ec6c7c94061c94893de3ff02f\n')
-    if hk['cluster'] != '0da3b44ec6c7c94061c94893de3ff02f':
+    hk = mod.parse_heketi('##CLUSTER f0000000000000000000000000000002\n')
+    if hk['cluster'] != 'f0000000000000000000000000000002':
         fails.append('heketi 裸 id 未识别')
 
     # 4) cluster list 啥也没给时，从 topology 的 Cluster Id 兜底
-    hk = mod.parse_heketi('##TOPO Cluster Id: ee4c1cb97575ea27abe89e552b79650a\n')
-    if hk['cluster'] != 'ee4c1cb97575ea27abe89e552b79650a':
+    hk = mod.parse_heketi('##TOPO Cluster Id: f0000000000000000000000000000018\n')
+    if hk['cluster'] != 'f0000000000000000000000000000018':
         fails.append('heketi cluster id 未被兜底')
 
     # 5) py2 下字节串会进表格：pad 必须能吃 bytes（2026-10-21 真机崩溃点）

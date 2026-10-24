@@ -3,7 +3,7 @@
 # 用法：ssh root@<brick-host> 'tr -d "\r" | bash -s' < scripts/node-storage.sh
 # 铁律：只读。不 mount、不改 LVM、不写文件。
 #
-# 输出契约见 docs/adr/0002-script-output-contract.md。
+# 输出契约见 docs/adr/0002-脚本输出契约.md。
 # 注意：本脚本只能证明"本机现有砖的状态"；"该有砖却没有砖"必须由 L1-04/L1-05 的
 # 集群视图交叉判断，不能因为 ##NO_BRICK_DIRS 就判 PASS。
 
@@ -12,13 +12,16 @@ export LC_ALL=C LANG=C
 
 _state() { printf '##STATE %s %s%s\n' "$1" "$2" "${3:+ $3}"; }
 
-run() {
-  local id="$1"; shift
+# 白名单承诺：单条轻命令 15s（references/commands.md §7）。超时记 SKIP(timeout)，不重试。
+run_to() {
+  local t="$1" id="$2"; shift 2
   local out rc
-  printf '##%s CMD: %s\n' "$id" "$*"
-  out=$("$@" 2>&1); rc=$?
+  printf '##%s CMD: timeout %ss %s\n' "$id" "$t" "$*"
+  out=$(timeout "$t" "$@" 2>&1); rc=$?
   [ -n "$out" ] && printf '%s\n' "$out"
-  if [ "$rc" -eq 0 ]; then _state "$id" OK; else _state "$id" ERR "rc=$rc"; fi
+  if [ "$rc" -eq 0 ]; then _state "$id" OK
+  elif [ "$rc" -eq 124 ]; then _state "$id" SKIP "timeout=${t}s"
+  else _state "$id" ERR "rc=$rc"; fi
   return 0
 }
 
@@ -40,7 +43,7 @@ echo "##STATE BRICKLIST OK"
 
 # L1-11 逐个 brick 校验挂载来源；findmnt 失败（目录不存在/未挂载）同样按异常上报
 for d in ${dirs}; do
-  if out=$(findmnt -n -T "${d}" -o TARGET,SOURCE,FSTYPE 2>&1); then
+  if out=$(timeout 10 findmnt -n -T "${d}" -o TARGET,SOURCE,FSTYPE 2>&1); then
     printf '%s\n' "$out"
     echo "##STATE L1-11[${d}] OK"
   else
@@ -49,10 +52,10 @@ for d in ${dirs}; do
   fi
 done
 
-run L1-09 df -P -B1 ${dirs}
-run L1-09i df -P -i ${dirs}
-run L1-10 lvs --noheadings -o lv_name,vg_name,pool_lv,lv_size,data_percent,metadata_percent
+run_to 15 L1-09 df -P -B1 ${dirs}
+run_to 15 L1-09i df -P -i ${dirs}
+run_to 15 L1-10 lvs --noheadings -o lv_name,vg_name,pool_lv,lv_size,data_percent,metadata_percent
 # VGS 仅作参考，不进 L1-12 判据；L1-12 由 lvs 的 lv_size 聚合得出
-run VGS vgs --noheadings -o vg_name,vg_size,vg_free
+run_to 15 VGS vgs --noheadings -o vg_name,vg_size,vg_free
 
 echo "##END"

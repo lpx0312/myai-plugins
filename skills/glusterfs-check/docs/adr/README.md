@@ -16,6 +16,8 @@
 | [0010](./0010-回归基线.md) | 回归基线 | `tests/` 结构样例 + `verify-scripts.sh` 静态校验 |
 | [0011](./0011-砖清单交叉校验.md) | 砖清单交叉校验 | 期望清单（L1-04）与本机 `##BRICKLIST` 求差集：缺砖 P0、孤儿砖 P2 |
 | [0012](./0012-人读版报告脚本.md) | 人读版报告脚本 | 新增 `scripts/gluster-health.py`；解析按 `##F` 标记不按行序；ssh 加 `LogLevel=ERROR`；采集失败不当 0 |
+| [0013](./0013-技能目录脱敏.md) | 技能目录脱敏 | 内网 IP/主机名/真实 ID 全量换占位符；新 fixture 先脱敏再入库 |
+| [0014](./0014-人读版附L3与超时统一.md) | 人读版附 L3 与超时统一 | `--kubeconfig` 附查 L3 与 HK-05/06；`--heketi-user`；shell 轻命令 15s；py2 超时 Timer 兜底；heal 非 Connected 改 INFO |
 
 ## 仍未决（想了但没定，不要实现）
 

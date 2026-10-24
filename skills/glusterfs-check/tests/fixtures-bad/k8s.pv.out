@@ -1,0 +1,10 @@
+{"kind":"PersistentVolumeList","apiVersion":"v1","items":[
+ {"metadata":{"name":"pvc-a"},
+  "spec":{"capacity":{"storage":"8Gi"},"glusterfs":{"endpoints":"glusterfs-dynamic-vol_a","path":"vol_f0000000000000000000000000000002"},
+          "claimRef":{"namespace":"default","name":"data-app1"},"persistentVolumeReclaimPolicy":"Delete"},
+  "status":{"phase":"Bound"}},
+ {"metadata":{"name":"pvc-b"},
+  "spec":{"capacity":{"storage":"5Gi"},"glusterfs":{"endpoints":"glusterfs-dynamic-vol_b","path":"vol_f0000000000000000000000000000008"},
+          "claimRef":{"namespace":"kube-system","name":"data-app2"},"persistentVolumeReclaimPolicy":"Delete"},
+  "status":{"phase":"Bound"}}
+]}

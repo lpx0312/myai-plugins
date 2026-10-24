@@ -1,3 +1,0 @@
-Filesystem                                                                        Inodes     IUsed      IFree IUse% Mounted on
-/dev/mapper/vg_89fbfc43659e561442ecba7f5773e123-brick_612275a07c3bb947dd3b0ed3252eb53b 2621440 1024 2620416 1% /var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_612275a07c3bb947dd3b0ed3252eb53b
-/dev/mapper/vg_89fbfc43659e561442ecba7f5773e123-brick_8f87fe26dd5700ce5614bd25aabbe9d7 2621440 1024 2620416 1% /var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_8f87fe26dd5700ce5614bd25aabbe9d7

@@ -1,13 +1,13 @@
 Number of Peers: 2
 
-Hostname: glusterfs02
-Uuid: 60805a0b-c2b9-4e7b-888d-49f168861bd2
+Hostname: gls02
+Uuid: 00000000-0000-0000-0002-000000000000
 State: Peer in Cluster (Connected)
 Other names:
-192.168.1.43
+10.10.0.12
 
-Hostname: glusterfs-arbiter
-Uuid: 9003af9b-ab99-473b-869e-4c9f2d7d0166
+Hostname: gls-arbiter
+Uuid: 00000000-0000-0000-0003-000000000000
 State: Peer in Cluster (Connected)
 Other names:
-192.168.1.44
+10.10.0.13

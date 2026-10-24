@@ -1,46 +1,46 @@
 ##HEKETI_SERVICE active
 ##HEKETI_VERSION heketi 9.0.0
-##CLUSTER Cluster Id: ee4c1cb97575ea27abe89e552b79650a
+##CLUSTER Cluster Id: f0000000000000000000000000000018
 ##CLUSTER     File: /var/lib/heketi/heketi.db
 ##CLUSTER     Block: true
 ##CLUSTER     Volumes: 2
-##TOPO Cluster Id: ee4c1cb97575ea27abe89e552b79650a
+##TOPO Cluster Id: f0000000000000000000000000000018
 ##TOPO     File: /var/lib/heketi/heketi.db
 ##TOPO     Block: true
 ##TOPO     Volumes: 2
 ##TOPO     Nodes: 3
 ##TOPO
-##TOPO     Node Id: 11111111111111111111111111111111
+##TOPO     Node Id: f0000000000000000000000000000003
 ##TOPO     State: online
-##TOPO     Cluster Id: ee4c1cb97575ea27abe89e552b79650a
+##TOPO     Cluster Id: f0000000000000000000000000000018
 ##TOPO         Zone: 1
-##TOPO         Management Hostnames: 192.168.1.42
-##TOPO         Storage Hostnames: 192.168.1.42
+##TOPO         Management Hostnames: 10.10.0.11
+##TOPO         Storage Hostnames: 10.10.0.11
 ##TOPO         Devices:
-##TOPO         Id:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
+##TOPO         Id:f0000000000000000000000000000012  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
 ##TOPO             Bricks:
-##TOPO             Id:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_f38b3b09dd3dcb6a656198779d5ff210
+##TOPO             Id:f0000000000000000000000000000013  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_f0000000000000000000000000000004/brick_f0000000000000000000000000000020
 ##TOPO
-##TOPO     Node Id: 22222222222222222222222222222222
+##TOPO     Node Id: f0000000000000000000000000000005
 ##TOPO     State: online
-##TOPO     Cluster Id: ee4c1cb97575ea27abe89e552b79650a
+##TOPO     Cluster Id: f0000000000000000000000000000018
 ##TOPO         Zone: 2
-##TOPO         Management Hostnames: 192.168.1.43
-##TOPO         Storage Hostnames: 192.168.1.43
+##TOPO         Management Hostnames: 10.10.0.12
+##TOPO         Storage Hostnames: 10.10.0.12
 ##TOPO         Devices:
-##TOPO         Id:cccccccccccccccccccccccccccccccc  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
+##TOPO         Id:f0000000000000000000000000000015  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
 ##TOPO             Bricks:
-##TOPO             Id:dddddddddddddddddddddddddddddddd  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_8f87fe26dd5700ce5614bd25aabbe9d7
+##TOPO             Id:f0000000000000000000000000000016  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_f0000000000000000000000000000009/brick_f0000000000000000000000000000011
 ##TOPO
-##TOPO     Node Id: 33333333333333333333333333333333
+##TOPO     Node Id: f0000000000000000000000000000006
 ##TOPO     State: online
-##TOPO     Cluster Id: ee4c1cb97575ea27abe89e552b79650a
+##TOPO     Cluster Id: f0000000000000000000000000000018
 ##TOPO         Zone: 3
-##TOPO         Management Hostnames: 192.168.1.44
-##TOPO         Storage Hostnames: 192.168.1.44
+##TOPO         Management Hostnames: 10.10.0.13
+##TOPO         Storage Hostnames: 10.10.0.13
 ##TOPO         Devices:
-##TOPO         Id:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
+##TOPO         Id:f0000000000000000000000000000019  State:online  Size (GiB):  99  Used (GiB):  10  Free (GiB):  89
 ##TOPO             Bricks:
-##TOPO             Id:ffffffffffffffffffffffffffffffff  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba
-##VOL Id:0da3b44ec6c7c94061c94893de3ff02f  Cluster:ee4c1cb97575ea27abe89e552b79650a  Name:vol_0da3b44ec6c7c94061c94893de3ff02f
-##VOL Id:7dbcea5fa093c147071e8145cb74e3ce  Cluster:ee4c1cb97575ea27abe89e552b79650a  Name:vol_7dbcea5fa093c147071e8145cb74e3ce
+##TOPO             Id:f0000000000000000000000000000021  Size (GiB): 5  Path: /var/lib/heketi/mounts/vg_f0000000000000000000000000000017/brick_f0000000000000000000000000000001
+##VOL Id:f0000000000000000000000000000002  Cluster:f0000000000000000000000000000018  Name:vol_f0000000000000000000000000000002
+##VOL Id:f0000000000000000000000000000008  Cluster:f0000000000000000000000000000018  Name:vol_f0000000000000000000000000000008

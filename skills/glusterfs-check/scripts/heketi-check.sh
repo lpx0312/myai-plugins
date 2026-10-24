@@ -5,22 +5,13 @@
 #
 # 凭据：默认从 /etc/heketi/heketi.json 就地读取（只读），不硬编码、不从命令行传。
 #       secret 只进入变量，从不回显；打印命令时一律脱敏成 ***。
-# 输出契约：见 docs/adr/0002-script-output-contract.md。
+# 输出契约：见 docs/adr/0002-脚本输出契约.md。
+# 超时：轻命令 15s、topology 60s（references/commands.md §7），超时记 SKIP(timeout)。
 
 set -u
 export LC_ALL=C LANG=C
 
 _state() { printf '##STATE %s %s%s\n' "$1" "$2" "${3:+ $3}"; }
-
-run() {
-  local id="$1"; shift
-  local out rc
-  printf '##%s CMD: %s\n' "$id" "$*"
-  out=$("$@" 2>&1); rc=$?
-  [ -n "$out" ] && printf '%s\n' "$out"
-  if [ "$rc" -eq 0 ]; then _state "$id" OK; else _state "$id" ERR "rc=$rc"; fi
-  return 0
-}
 
 HK_JSON="${HK_JSON:-/etc/heketi/heketi.json}"
 HK_USER="${HK_USER:-admin}"
@@ -44,17 +35,18 @@ if [ -z "${HK_SECRET:-}" ]; then
   exit 0
 fi
 
-# heketi-cli 包装：命令行一律脱敏
-hk() { heketi-cli --user "${HK_USER}" --secret "${HK_SECRET}" "$@"; }
+# heketi-cli 包装：打印命令时一律脱敏
 show_hk() { printf 'heketi-cli --user %s --secret *** %s' "${HK_USER}" "$*"; }
 
-run_hk() {
-  local id="$1"; shift
+run_to() {
+  local t="$1" id="$2"; shift 2
   local out rc
-  printf '##%s CMD: %s\n' "$id" "$(show_hk "$@")"
-  out=$(hk "$@" 2>&1); rc=$?
+  printf '##%s CMD: timeout %ss %s\n' "$id" "$t" "$*"
+  out=$(timeout "$t" "$@" 2>&1); rc=$?
   [ -n "$out" ] && printf '%s\n' "$out"
-  if [ "$rc" -eq 0 ]; then _state "$id" OK; else _state "$id" ERR "rc=$rc"; fi
+  if [ "$rc" -eq 0 ]; then _state "$id" OK
+  elif [ "$rc" -eq 124 ]; then _state "$id" SKIP "timeout=${t}s"
+  else _state "$id" ERR "rc=$rc"; fi
   return 0
 }
 
@@ -70,11 +62,11 @@ run_hk_to() {
   return 0
 }
 
-run HK-01 systemctl is-active heketi
-run HK-01b heketi-cli --version
-run_hk HK-01c cluster list
+run_to 15 HK-01 systemctl is-active heketi
+run_to 15 HK-01b heketi-cli --version
+run_hk_to 15 HK-01c cluster list
 run_hk_to 60 HK-02 topology info
-run_hk HK-04 volume list
-run HK-04b gluster v list
+run_hk_to 15 HK-04 volume list
+run_to 15 HK-04b gluster v list
 
 echo "##END"

@@ -6,8 +6,8 @@
   <volInfo>
     <volumes>
       <volume>
-        <name>vol_0da3b44ec6c7c94061c94893de3ff02f</name>
-        <id>3026ce07-b110-4223-9fc8-f39792b9875d</id>
+        <name>vol_f0000000000000000000000000000002</name>
+        <id>00000000-0000-0000-0001-000000000000</id>
         <status>1</status>
         <statusStr>Started</statusStr>
         <snapshotCount>1</snapshotCount>
@@ -22,9 +22,9 @@
         <typeStr>Replicate</typeStr>
         <transport>0</transport>
         <bricks>
-          <brick uuid="60805a0b-c2b9-4e7b-888d-49f168861bd2">192.168.1.43:/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_8f87fe26dd5700ce5614bd25aabbe9d7/brick<name>192.168.1.43:/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_8f87fe26dd5700ce5614bd25aabbe9d7/brick</name><hostUuid>60805a0b-c2b9-4e7b-888d-49f168861bd2</hostUuid><isArbiter>0</isArbiter></brick>
-          <brick uuid="d7984482-710d-4f99-ba12-421a76345650">192.168.1.42:/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_f38b3b09dd3dcb6a656198779d5ff210/brick<name>192.168.1.42:/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_f38b3b09dd3dcb6a656198779d5ff210/brick</name><hostUuid>d7984482-710d-4f99-ba12-421a76345650</hostUuid><isArbiter>0</isArbiter></brick>
-          <brick uuid="9003af9b-ab99-473b-869e-4c9f2d7d0166">192.168.1.44:/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba/brick<name>192.168.1.44:/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_09fb8f423308736bbbd667746dd67cba/brick</name><hostUuid>9003af9b-ab99-473b-869e-4c9f2d7d0166</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0002-000000000000">10.10.0.12:/var/lib/heketi/mounts/vg_f0000000000000000000000000000009/brick_f0000000000000000000000000000011/brick<name>10.10.0.12:/var/lib/heketi/mounts/vg_f0000000000000000000000000000009/brick_f0000000000000000000000000000011/brick</name><hostUuid>00000000-0000-0000-0002-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0005-000000000000">10.10.0.11:/var/lib/heketi/mounts/vg_f0000000000000000000000000000004/brick_f0000000000000000000000000000020/brick<name>10.10.0.11:/var/lib/heketi/mounts/vg_f0000000000000000000000000000004/brick_f0000000000000000000000000000020/brick</name><hostUuid>00000000-0000-0000-0005-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0003-000000000000">10.10.0.13:/var/lib/heketi/mounts/vg_f0000000000000000000000000000017/brick_f0000000000000000000000000000001/brick<name>10.10.0.13:/var/lib/heketi/mounts/vg_f0000000000000000000000000000017/brick_f0000000000000000000000000000001/brick</name><hostUuid>00000000-0000-0000-0003-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
         </bricks>
         <optCount>5</optCount>
         <options>
@@ -46,13 +46,13 @@
           </option>
           <option>
             <name>user.heketi.id</name>
-            <value>0da3b44ec6c7c94061c94893de3ff02f</value>
+            <value>f0000000000000000000000000000002</value>
           </option>
         </options>
       </volume>
       <volume>
-        <name>vol_7dbcea5fa093c147071e8145cb74e3ce</name>
-        <id>94deb784-3562-4658-a36b-f366f7e457a6</id>
+        <name>vol_f0000000000000000000000000000008</name>
+        <id>00000000-0000-0000-0004-000000000000</id>
         <status>1</status>
         <statusStr>Started</statusStr>
         <snapshotCount>0</snapshotCount>
@@ -67,15 +67,15 @@
         <typeStr>Replicate</typeStr>
         <transport>0</transport>
         <bricks>
-          <brick uuid="9003af9b-ab99-473b-869e-4c9f2d7d0166">192.168.1.44:/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_8a2950553edf213448ea3ccfeaf7cfa0/brick<name>192.168.1.44:/var/lib/heketi/mounts/vg_ec6665683a614441631a8c9ac56a3bad/brick_8a2950553edf213448ea3ccfeaf7cfa0/brick</name><hostUuid>9003af9b-ab99-473b-869e-4c9f2d7d0166</hostUuid><isArbiter>0</isArbiter></brick>
-          <brick uuid="60805a0b-c2b9-4e7b-888d-49f168861bd2">192.168.1.43:/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_612275a07c3bb947dd3b0ed3252eb53b/brick<name>192.168.1.43:/var/lib/heketi/mounts/vg_89fbfc43659e561442ecba7f5773e123/brick_612275a07c3bb947dd3b0ed3252eb53b/brick</name><hostUuid>60805a0b-c2b9-4e7b-888d-49f168861bd2</hostUuid><isArbiter>0</isArbiter></brick>
-          <brick uuid="d7984482-710d-4f99-ba12-421a76345650">192.168.1.42:/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_bfa4efcf358ef6a1e3d04140ea5cadeb/brick<name>192.168.1.42:/var/lib/heketi/mounts/vg_21dfa6cf69e974f184ddf6a3f364d034/brick_bfa4efcf358ef6a1e3d04140ea5cadeb/brick</name><hostUuid>d7984482-710d-4f99-ba12-421a76345650</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0003-000000000000">10.10.0.13:/var/lib/heketi/mounts/vg_f0000000000000000000000000000017/brick_f0000000000000000000000000000010/brick<name>10.10.0.13:/var/lib/heketi/mounts/vg_f0000000000000000000000000000017/brick_f0000000000000000000000000000010/brick</name><hostUuid>00000000-0000-0000-0003-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0002-000000000000">10.10.0.12:/var/lib/heketi/mounts/vg_f0000000000000000000000000000009/brick_f0000000000000000000000000000007/brick<name>10.10.0.12:/var/lib/heketi/mounts/vg_f0000000000000000000000000000009/brick_f0000000000000000000000000000007/brick</name><hostUuid>00000000-0000-0000-0002-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
+          <brick uuid="00000000-0000-0000-0005-000000000000">10.10.0.11:/var/lib/heketi/mounts/vg_f0000000000000000000000000000004/brick_f0000000000000000000000000000014/brick<name>10.10.0.11:/var/lib/heketi/mounts/vg_f0000000000000000000000000000004/brick_f0000000000000000000000000000014/brick</name><hostUuid>00000000-0000-0000-0005-000000000000</hostUuid><isArbiter>0</isArbiter></brick>
         </bricks>
         <optCount>5</optCount>
         <options>
           <option>
             <name>user.heketi.id</name>
-            <value>7dbcea5fa093c147071e8145cb74e3ce</value>
+            <value>f0000000000000000000000000000008</value>
           </option>
           <option>
             <name>storage.fips-mode-rchecksum</name>

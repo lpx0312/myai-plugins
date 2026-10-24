@@ -17,7 +17,7 @@ description: GlusterFS 只读巡检（heketi + Kubernetes 场景）。检查集�
 
 | 要素 | 要求 | 例子 |
 |---|---|---|
-| 目标 | 用户**明确点名**了主机或集群 | 「巡检 192.168.1.42-44」「用 `~/.kube/xxx` 查这个集群」 |
+| 目标 | 用户**明确点名**了主机或集群 | 「巡检 10.10.0.11-13」「用 `~/.kube/xxx` 查这个集群」 |
 | 范围 | 是**只读巡检** | 「巡检」「健康检查」「查一下」 |
 
 缺任意一条 → **runbook 模式**：只输出命令清单和回填表，**一条连接都不建**。
@@ -100,7 +100,8 @@ Get-Content -Raw scripts/gluster-check.sh | ssh <opts> root@<host> "tr -d '\r' |
 4. 不修改本地任何文件/配置（不写 `known_hosts`、不改 kubeconfig、不装包）。
 5. 默认**不落盘**报告。用户明确要求并给了目录，才写文件。
 6. `scripts/gluster-health.py`（人读版）同样只调用白名单命令、不写远端文件；它只是**换了一种展示**，
-   不改变 §5 的检查范围，也不替代 `##STATE` 契约脚本（`docs/adr/0012-人读版报告脚本.md`）。
+   不改变 §5 的检查范围（L1/L2 默认，L3 需 `--kubeconfig`，见 `docs/adr/0014-人读版附L3与超时统一.md`），
+   也不替代 `##STATE` 契约脚本（`docs/adr/0012-人读版报告脚本.md`）。
 
 遇到写操作请求 → 见 `references/refusals.md`：**拒绝 + 给手册章节 + 不复述可执行命令让人误以为已经做了**。
 
@@ -116,9 +117,14 @@ Get-Content -Raw scripts/gluster-check.sh | ssh <opts> root@<host> "tr -d '\r' |
 不出 XML、不落盘：
 
 ```bash
-python scripts/gluster-health.py --nodes 192.168.1.42,192.168.1.43,192.168.1.44
-python scripts/gluster-health.py --nodes ... --verbose   # 附每块砖的挂载源 + 实际执行的命令
+python scripts/gluster-health.py --nodes 10.10.0.11,10.10.0.12,10.10.0.13
+python scripts/gluster-health.py --nodes ... --verbose          # 附每块砖的挂载源 + 实际执行的命令
+python scripts/gluster-health.py --nodes ... --kubeconfig ~/.kube/config   # 附查 L3（SC/PVC/PV/事件）
 ```
+
+- `--kubeconfig` 给出时附查 L3；**只打印 current-context 供人工核对，绝不 use-context**。kubectl 只在本机执行。
+- `--heketi-user` 可指定 heketi 用户（默认 admin，对应 heketi.json 的 `jwt.<user>.key`）。
+- L3 判定含 K8S-01..06 与 HK-05/06（容量对账、clusterid 一致性）；heketi 侧会按需逐卷 `volume info` 取 Size。
 
 - 它是**给人看**的：结论口径与 §4.2 的 `P0/P1/P2` 相同，表格里不带证据行；要四段式时仍按 §4.3 写。
 - 阈值与 `references/thresholds.md` 一致；**采集失败一律显示 `n/a` / `?` 并落 `SKIP`，不当成 0**。
@@ -152,7 +158,7 @@ python scripts/gluster-health.py --nodes ... --verbose   # 附每块砖的挂载
 四段式，缺一不可：
 
 ```
-【L1-05】vol_xxx 的 brick 192.168.1.44 离线
+【L1-05】vol_xxx 的 brick 10.10.0.13 离线
 - 判定依据：<执行的命令> → <输出里的关键行>
 - 影响：该卷副本数从 3 降为 2，再坏一台即不可写；heal 无法完成
 - 修复路径：references/remediation/03-brick离线恢复.md（人工执行，需维护窗口）

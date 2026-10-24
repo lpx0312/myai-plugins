@@ -26,12 +26,15 @@ bash tests/verify-scripts.sh
 python tests/test-report.py
 ```
 
-`tests/fixtures`（真实采集结果，正常态）与 `tests/fixtures-bad`（在其上构造 5 类故障）
-喂给 `scripts/gluster-health.py`，断言结论行；另有单元断言覆盖真机踩过的三类坑：
+`tests/fixtures`（真实采集结果的**脱敏副本**，正常态，含 L3 的 k8s.*/heketi-vinfo 样本）
+与 `tests/fixtures-bad`（在其上构造 9 类故障：砖离线/脑裂/df 92%/池 91.5%/heketi 节点
+与设备离线/快照/孤儿砖/扩容门开+容量虚标/挂载事件+Pod 未 Running）喂给
+`scripts/gluster-health.py`，断言结论行；另有单元断言覆盖真机踩过的三类坑：
 
 | 断言 | 为什么 |
 |---|---|
 | `##F` 噪音行被忽略、按目录名匹配 | ssh 的 `Warning: Permanently added ...` 曾顶掉 findmnt 首行，误报"砖挂载丢失" |
+| heal 砖非 Connected 记 INFO 不计数 | 单一根因原则（ADR-0004/0014），曾虚增 P0 计数 |
 | 缺数据落 `SKIP`，不显示成 0 | `v status` / `heal` 采集失败不能变成"一切正常" |
 | `pad/row` 接受 bytes | python 2.7 下 `str()` 是字节串，曾直接 `TypeError` 崩在表格第一行 |
 
