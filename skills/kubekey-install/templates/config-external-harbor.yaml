@@ -1,0 +1,65 @@
+# config.yaml —— 单 master + 外部 Harbor 模板（ks 版本对应 k8s 版本）
+# 生成方式：./kk create config --with-kubernetes v1.31.14 -o config.yaml   然后按下面改
+# 与默认模板的差异只有几处，都标了 <<< 改这里
+apiVersion: kubekey.kubesphere.io/v1
+kind: Config
+spec:
+  certs:
+    ca:            { date: 876000h, gen_cert_policy: IfNotPresent }   # 100 年
+    kubernetes_ca: { date: 876000h, gen_cert_policy: IfNotPresent }
+    front_proxy_ca: { date: 876000h, gen_cert_policy: IfNotPresent }
+    etcd:          { date: 876000h, gen_cert_policy: IfNotPresent }
+    image_registry: { date: 876000h, gen_cert_policy: IfNotPresent }
+  native:
+    ntp:
+      enabled: true
+      servers:
+        - "kk-master"        # <<< 用 inventory 主机名（自动取 internal_ipv4）或真实 NTP IP
+    timezone: Asia/Shanghai
+  zone: ""                   # 离线安装留空即可
+  kubernetes:
+    cluster_name: kk-test                              # <<< 改集群名
+    certs:
+      ca_cert: "/root/kubekey/kubekey/kubekey/pki/kubernetes.crt"
+      ca_key: "/root/kubekey/kubekey/kubekey/pki/kubernetes.key"
+      front_proxy_cert: "/root/kubekey/kubekey/kubekey/pki/front-proxy.crt"
+      front_proxy_key: "/root/kubekey/kubekey/kubekey/pki/front-proxy.key"
+      renew: true
+    kube_version: v1.31.14                             # <<< 与离线包一致
+    helm_version: v3.13.3                              # <<< v1.31→3.13.3 / v1.32→3.14.3
+    sandbox_image:
+      tag: "3.10"
+    control_plane_endpoint:
+      type: local                                      # <<< 单 master=local；多 master=kube-vip(+kube_vip.address)/haproxy
+  etcd:
+    etcd_version: v3.5.24
+  image_registry:
+    type: ""                                           # <<< 空 = 用已有外部仓库，不装 registry
+    auth:
+      registry: "harbor.example.com:7000"              # <<< 外部 Harbor 地址（镜像必须已在里面）
+      username: "admin"
+      password: "<HARBOR_PASSWORD>"
+  cri:
+    container_manager: containerd
+    crictl_version: v1.31.0
+  cni:
+    type: calico
+    multi_cni: none
+    calico_version: v3.30.5
+  storage_class:
+    local:                     # openebs-hostpath
+      enabled: true
+      default: false
+    localpv_provisioner_version: 4.4.0
+    nfs:                       # 节点需装 nfs-utils，否则 pod 卡 ContainerCreating
+      enabled: true
+      default: true            # <<< 两个存储类只能有一个 default
+      server: 192.168.0.180    # <<< NFS 服务端
+      path: /volume1/ESXI/kk2
+  dns:
+    coredns:
+      image: { tag: v1.11.3 }
+    nodelocaldns:
+      enabled: true
+      image: { tag: 1.23.1 }
+  image_manifests: []

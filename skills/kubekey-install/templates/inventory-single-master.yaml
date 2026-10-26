@@ -1,0 +1,40 @@
+# inventory.yaml —— 单 master 模板（外部 Harbor 不写进 inventory）
+# 用法：把 IP / 主机名 / 密码换成目标环境；主机名要与 config.yaml 里引用的一致
+apiVersion: kubekey.kubesphere.io/v1
+kind: Inventory
+metadata:
+  name: default
+spec:
+  hosts:
+    # ----- Master 节点（同时也是 etcd 节点）-----
+    kk-master:
+      connector:
+        type: ssh
+        host: 192.168.1.50
+        port: 22
+        user: root
+        password: "<SSH_PASSWORD>"
+      internal_ipv4: 192.168.1.50
+    # ----- Worker 节点（多台就照抄，改主机名/IP）-----
+    kk-work:
+      connector:
+        type: ssh
+        host: 192.168.1.51
+        port: 22
+        user: root
+        password: "<SSH_PASSWORD>"
+      internal_ipv4: 192.168.1.51
+  groups:
+    k8s_cluster:            # 聚合组，kk 靠它找全部节点
+      groups:
+        - kube_control_plane
+        - kube_worker
+    kube_control_plane:
+      hosts:
+        - kk-master
+    kube_worker:
+      hosts:
+        - kk-work
+    etcd:
+      hosts:
+        - kk-master
